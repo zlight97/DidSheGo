@@ -1,0 +1,49 @@
+https://dbdiagram.io/d
+
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table owner {
+  id integer [primary key]
+  username varchar
+  password varchar
+  created_at timestamp
+}
+
+Table pets {
+  id integer [primary key]
+  ownerid integer
+  name varchar
+  user_id integer
+  created_at timestamp
+}
+
+Table guests {
+  id integer [primary key]
+  petid integer
+  ownerid integer
+  created_at timestamp
+}
+
+Table loginsession {
+  id integer [primary key]
+  ownerid integer
+  created_at timestamp
+}
+
+Table actions {
+  id integer [primary key]
+  petid integer
+  type varchar
+  created_at timestamp
+}
+
+Ref: "pets"."ownerid" - "owner"."id"
+
+Ref: "guests"."petid" - "pets"."id"
+
+Ref: "guests"."ownerid" > "owner"."id"
+
+Ref: "owner"."id" < "loginsession"."ownerid"
+
+Ref: "pets"."id" < "actions"."petid"

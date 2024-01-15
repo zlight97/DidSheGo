@@ -280,7 +280,7 @@ p {
 }
 
 .yellow {
-  background-image: linear-gradient(to right, #fbdb0d 0%, #e26212 51%, #ff4d00 100%);
+  background-image: linear-gradient(to right, #759900 0%, #b5c200 25%, #fbdb0d 75%);
   margin: 10px;
   padding: 15px 45px;
   text-align: center;
@@ -294,6 +294,27 @@ p {
 }
 
 .yellow:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.green {
+  background-image: linear-gradient(to right, #0ad200 0%, #3ac200 25%, #26ff00 75%);
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  box-sizing: inherit;
+}
+
+.green:hover {
   background-position: right center;
   /* change the direction of the change here */
   color: #fff;
