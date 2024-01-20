@@ -7,6 +7,8 @@ app = Flask(__name__)
 def increment():
     if request.method == 'POST':
         data = request.form # this should be a dict of params
+        print(data)
+        return "test"
     else:
         pass #This is an error case
 
