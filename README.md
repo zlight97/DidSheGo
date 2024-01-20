@@ -2,4 +2,4 @@
 
 really though when did she go
 
-python requires flask
+python requires flask, flask-cors

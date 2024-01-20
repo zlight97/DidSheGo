@@ -38,25 +38,37 @@ function login(){
 }
 function submitLogin(username, password){
     const url = "http://localhost:5000/submitlogin"
+    const body = JSON.stringify({
+        username: username,
+        password: password
+      });
+    const response = (xhr) => {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            resp = JSON.parse(xhr.responseText);
+            console.log(resp);
+            if (resp.success === true)
+            {
+                loggedIn(resp.token);
+                return;
+            }
+        }
+        document.getElementById("vaild-pass").innerHTML = "Incorrect Username/Password";
+        console.log(`Error: ${xhr.status}`);
+      };
 
-    fetch("http://127.0.0.1:5000/submitlogin", {
-    method: "POST",
-    body: JSON.stringify({
-        userId: 1,
-        title: "Fix my bugs",
-        completed: false
-    }),
-    headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        "Content-type": "application/json; charset=UTF-8"
-    }
-    })
-  .then((response) => response.json())
-  .then((json) => console.log(json));
+    sendPost(url, body, response);
 
+}
 
+function sendPost(url, body, responseFunc)
+{
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
+    xhr.setRequestHeader("Access-Control-Allow-Headers", "x-requested-with");
+    xhr.onload = () => responseFunc(xhr)
+    console.log(body)
+    xhr.send(body);
 }
 
 function newButton(){
