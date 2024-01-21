@@ -5,13 +5,13 @@ var currentState = 0;
 // 0:"loginform",
 // 1:"button-displayer"
 const stateToDiv = ["loginform", "button-displayer"]
-
+const stateToDis = ["grid",      "block"]
 
 function updateState(newState)
 {
     hideDiv(stateToDiv[currentState]);
     currentState = newState;
-    showDiv(stateToDiv[newState]);
+    showDiv(stateToDiv[newState], stateToDis[newState]);
 }
 
 function sendPost(body, responseFunc, url)
@@ -22,7 +22,6 @@ function sendPost(body, responseFunc, url)
     xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
     xhr.setRequestHeader("Access-Control-Allow-Headers", "x-requested-with");
     xhr.onload = () => responseFunc(xhr);
-    console.log(body);
     xhr.send(JSON.stringify(body));
 }
 function sendGet(url, responseFunc)
@@ -47,16 +46,16 @@ function addButton(name, color, id){
     elementTag.appendChild(elementText);
 
     let buttonDisplayer = document.getElementById('button-displayer');
-    buttonDisplayer.appendChild(elementTag);
+    buttonDisplayer.insertBefore(elementTag, buttonDisplayer.lastChild);
 }
 
 function hideDiv(div){
     let x = document.getElementById(div);
-    x.style.display = "block";
-}
-function showDiv(div){
-    let x = document.getElementById(div);
     x.style.display = "none";
+}
+function showDiv(div, display){
+    let x = document.getElementById(div);
+    x.style.display = display;
 }
 
 function login(){
@@ -79,11 +78,9 @@ function login(){
 function parseSubmitLogin(xhr) {
     if (xhr.readyState == 4 && xhr.status == 200) {
         let resp = JSON.parse(xhr.responseText);
-        console.log(resp);
         if (resp.success === true)
         {
             getPets();
-            updateState(1)
             return;
         }
     }
@@ -101,16 +98,22 @@ function submitLogin(username, password){
 
 }
 
+function createPets(pets){
+    pets = JSON.parse(pets);
+    for (const [key, value] of Object.entries(pets)) {
+        console.log(`${key}: ${value}`);
+        addButton(key, 'red', key)
+      }
+    // addButton()
+    updateState(1);
+}
+
 function getPets(){
     const response = (xhr) => {
-        if (xhr.status == 200) {
+        if (xhr.readyState == 4 && xhr.status == 200) {
             resp = xhr.responseText;
-            console.log(resp);
-            if (resp.success === true)
-            {
-                loggedIn(resp.token);
-                return;
-            }
+            createPets(resp);
+            return;
         }
     document.getElementById("vaild-pass").innerHTML = "Incorrect Username/Password";
     };
