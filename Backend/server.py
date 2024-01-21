@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS
+import flask
 import json
 
 app = Flask(__name__)
@@ -15,8 +16,19 @@ def login():
         if "username" in data and "password" in data:
             success = True
             token = "TEST TOKEN"
-    response = {"success":success,"token":token}
-    return json.dumps(response)
+    return flask.jsonify({"success":success,"token":token})
+
+@app.route("/getpets", methods = ['GET'])
+def getPets():
+    response = flask.jsonify()
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    if request.method == "GET":
+        data = request.headers.get('Access-Token')
+        print(data)
+        if 'test' in data:
+            response= flask.jsonify({'Gracie':[('pee',1),('poop',2)]})
+    print(request)
+    return response
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
