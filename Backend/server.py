@@ -3,6 +3,7 @@ from flask import request
 from flask_cors import CORS
 import flask
 import json
+from time import time
 
 app = Flask(__name__)
 CORS(app)
@@ -15,7 +16,7 @@ def login():
         data = request.get_json() # this should be a dict of params
         if "username" in data and "password" in data:
             success = True
-            token = "TEST TOKEN"
+            token = "test token"
     return flask.jsonify({"success":success,"token":token})
 
 @app.route("/getpets", methods = ['GET'])
@@ -26,7 +27,7 @@ def getPets():
         data = request.headers.get('Access-Token')
         print(data)
         if 'test' in data:
-            response= flask.jsonify({'Gracie':[('pee',1),('poop',2)]})
+            response= flask.jsonify({'Gracie':[('pee',1,int(time())),('poop',2,int(time()))]})
     print(request)
     return response
 

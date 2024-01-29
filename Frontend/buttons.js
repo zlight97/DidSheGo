@@ -1,17 +1,48 @@
 const BACKEND_URL = "http://localhost:5000/";
 var jsonWebToken = "This is a test token";
 var currentState = 0;
+var petSelected = '';
+var allPets = null;
 
 // 0:"loginform",
 // 1:"button-displayer"
-const stateToDiv = ["loginform", "button-displayer"]
-const stateToDis = ["grid",      "block"]
+const stateToDiv = ["loginform", "button-displayer", "button-displayer"]
+const stateToDis = ["grid",      "block",            "block"]
+
+function logOut()
+{
+    document.getElementById("vaild-pass").innerHTML = ""
+    clearButtons()
+    allPets = null;
+    petSelected = '';
+    jsonWebToken = '';
+    updateState(0)
+}
+
+function swapPage(newState)
+{
+    hideDiv(stateToDiv[currentState]);
+    showDiv(stateToDiv[newState], stateToDis[newState]);
+    currentState = newState
+}
 
 function updateState(newState)
 {
-    hideDiv(stateToDiv[currentState]);
-    currentState = newState;
-    showDiv(stateToDiv[newState], stateToDis[newState]);
+    swapPage(newState)
+    switch(newState)
+    {
+        case 0:
+            
+            break;
+        case 1:
+            clearButtons();
+            drawPets();
+            break;
+        case 2:
+            clearButtons();
+        default:
+            break;
+    }
 }
 
 function sendPost(body, responseFunc, url)
@@ -34,19 +65,81 @@ function sendGet(url, responseFunc)
     request.send(null);
 }
 
+function drawActions(petName){
+    if(allPets === null)
+    {
+        getPets()
+        return
+    }
+    let selected = allPets[petName]
+    for (const key of selected) {
+        addActionButton(key[0], key[1], key[2])
+      }
+}
 
+function selectPet(name){
+    updateState(2);
+    drawActions(name)
+}
 
-function addButton(name, color, id){
+function sendTime(entryId)
+{
+    console.log(entryId)
+    const time = Date.now() / 1000;
+    const body = {
+        auth: token,
+        time: time,
+        id:   entryId
+      };
+
+    sendPost(body, () => {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let resp = JSON.parse(xhr.responseText);
+            if (resp.success === true)
+            {
+                getPets()//TODO update pet list but stay on this page to and refresh icons/colors
+            }
+        }
+    }, BACKEND_URL + "updateTime");
+    //Send post with entry and current time in epoch
+}
+
+function addActionButton(name, id, time){
     let elementTag = document.createElement('button');
     let elementText = document.createTextNode(name);
-    elementTag.className = color;
-    elementTag.id = id; //can use id to refrence which entry
-    elementTag.onclick =function() { updateState(0); } //These are set to functions
+    const diffDate = Date.now()/1000 - time
+    if(diffDate < 100)//These numbers should be config variables
+        elementTag.className = "green";
+    else if(diffDate < 1000)
+        elementTag.className = "yellow";
+    else
+        elementTag.className = "red";
+    elementTag.onclick =function() { sendTime(id); } //These are set to functions
 
     elementTag.appendChild(elementText);
 
     let buttonDisplayer = document.getElementById('button-displayer');
     buttonDisplayer.insertBefore(elementTag, buttonDisplayer.lastChild);
+}
+
+function addButton(name, color){
+    let elementTag = document.createElement('button');
+    let elementText = document.createTextNode(name);
+    elementTag.className = color;
+    elementTag.onclick =function() { selectPet(name); } //These are set to functions
+
+    elementTag.appendChild(elementText);
+
+    let buttonDisplayer = document.getElementById('button-displayer');
+    buttonDisplayer.insertBefore(elementTag, buttonDisplayer.lastChild);
+}
+
+function clearButtons()
+{
+    const buttonDisplayer = document.getElementById("button-displayer");
+    while (buttonDisplayer.firstChild != buttonDisplayer.lastChild) {
+        buttonDisplayer.removeChild(buttonDisplayer.firstChild);
+    }
 }
 
 function hideDiv(div){
@@ -59,15 +152,15 @@ function showDiv(div, display){
 }
 
 function login(){
-    let username = document.getElementById("username");
-    let password = document.getElementById("password");
+    const username = document.getElementById("username");
+    const password = document.getElementById("password");
     if (username === null || password === null)
     {   
         document.getElementById("vaild-pass").innerHTML = "Incorrect Username/Password";
         return false;
     }
-    let validpass = password.value
-
+    const validpass = password.value;
+    password.value = "";
     if (validpass.length <= 8 || validpass.length >= 20) {
         document.getElementById("vaild-pass").innerHTML = "Incorrect Username/Password";
         return false;
@@ -80,6 +173,7 @@ function parseSubmitLogin(xhr) {
         let resp = JSON.parse(xhr.responseText);
         if (resp.success === true)
         {
+            jsonWebToken = resp.token
             getPets();
             return;
         }
@@ -98,21 +192,29 @@ function submitLogin(username, password){
 
 }
 
-function createPets(pets){
-    pets = JSON.parse(pets);
-    for (const [key, value] of Object.entries(pets)) {
+function updatePets(pets){
+    allPets = JSON.parse(pets);
+}
+
+function drawPets(){
+    if(allPets === null)
+    {
+        getPets()
+        return
+    }
+    for (const [key, value] of Object.entries(allPets)) {
         console.log(`${key}: ${value}`);
-        addButton(key, 'red', key)
+        addButton(key, 'red')
       }
-    // addButton()
-    updateState(1);
 }
 
 function getPets(){
     const response = (xhr) => {
         if (xhr.readyState == 4 && xhr.status == 200) {
             resp = xhr.responseText;
-            createPets(resp);
+            updatePets(resp);
+            if(currentState!=1)
+                updateState(1);
             return;
         }
     document.getElementById("vaild-pass").innerHTML = "Incorrect Username/Password";
@@ -121,9 +223,8 @@ function getPets(){
 }
 
 function newButton(){
-    addButton('poop', 'green', 'testid');
-}
-
-function newButton2(id){
-    addButton('poop', 'green', id);
+    
+    // clearButtons()
+    // addButton('poop', 'green', 'testid');
+    logOut()
 }
