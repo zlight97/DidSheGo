@@ -36,6 +36,7 @@ function updateState(newState)
             break;
         case 1:
             clearButtons();
+            petSelected = ''
             drawPets();
             break;
         case 2:
@@ -79,7 +80,8 @@ function drawActions(petName){
 
 function selectPet(name){
     updateState(2);
-    drawActions(name)
+    petSelected = name
+    drawActions(petSelected)
 }
 
 function sendTime(entryId)
@@ -87,12 +89,12 @@ function sendTime(entryId)
     console.log(entryId)
     const time = Date.now() / 1000;
     const body = {
-        auth: token,
+        auth: jsonWebToken,
         time: time,
         id:   entryId
       };
 
-    sendPost(body, () => {
+    sendPost(body, (xhr) => {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let resp = JSON.parse(xhr.responseText);
             if (resp.success === true)
@@ -100,7 +102,7 @@ function sendTime(entryId)
                 getPets()//TODO update pet list but stay on this page to and refresh icons/colors
             }
         }
-    }, BACKEND_URL + "updateTime");
+    }, BACKEND_URL + "submitTime");
     //Send post with entry and current time in epoch
 }
 
@@ -108,9 +110,10 @@ function addActionButton(name, id, time){
     let elementTag = document.createElement('button');
     let elementText = document.createTextNode(name);
     const diffDate = Date.now()/1000 - time
-    if(diffDate < 100)//These numbers should be config variables
+    console.log(diffDate)
+    if(diffDate < 10000000)//These numbers should be config variables
         elementTag.className = "green";
-    else if(diffDate < 1000)
+    else if(diffDate < 21600000)
         elementTag.className = "yellow";
     else
         elementTag.className = "red";
@@ -213,7 +216,9 @@ function getPets(){
         if (xhr.readyState == 4 && xhr.status == 200) {
             resp = xhr.responseText;
             updatePets(resp);
-            if(currentState!=1)
+            if(currentState === 2 && petSelected != "")
+                selectPet(petSelected)
+            else if(currentState!=1)
                 updateState(1);
             return;
         }
