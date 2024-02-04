@@ -1,4 +1,4 @@
-https://dbdiagram.io/d
+//dbdiagram.io/d
 
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
@@ -28,6 +28,7 @@ Table guests {
 Table loginsession {
   id integer [primary key]
   ownerid integer
+  loginToken varchar
   created_at timestamp
 }
 
