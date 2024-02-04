@@ -3,7 +3,7 @@ import utils
 #TODO does this need to be threadsafe for flask?
 class DSGDB:
     def __init__(self):
-        self.con = sqlite3.connect("test.db")
+        self.con = sqlite3.connect("test.sqlite")
         self.cursor = self.con.cursor()
     def createTables(self):
         with open("createTables.sql") as f:
@@ -21,6 +21,6 @@ class DSGDB:
         print(self.cursor.execute(query).fetchall())
 if __name__ == "__main__":
     db = DSGDB()
-    # db.createTables()
+    db.createTables()
     db.newuser("test","testtest", "test@test.com")
     db.getData()
