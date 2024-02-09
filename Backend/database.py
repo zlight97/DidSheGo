@@ -35,13 +35,15 @@ def insertNewUser(username, password, email):
     query = f"INSERT INTO users (username,password,email,verified) VALUES ('{username}','{hashedPw.decode('utf-8')}', '{email}', 0);"
     cursor.execute(query)
     con.commit()
+    return cursor.lastrowid
+
 def getData():
     cursor, con = getCursor()
     query = "SELECT * FROM users"
     print(cursor.execute(query).fetchall())
 
 if __name__ == "__main__":
-    # db.createTables()
+    # createTables()
     insertNewUser("test","testtest", "test@test.com")
     getData()
     a, b = getUserInfo(id=1)
