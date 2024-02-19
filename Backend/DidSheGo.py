@@ -3,10 +3,12 @@ import sqlite3
 import utils
 import uuid
 
-def createLogin(username, password, email):
+def createLogin(email, password):
     try:
-        userid = db.insertNewUser(username,password,email)
+        userid = db.insertNewUser(email,password)
     except sqlite3.IntegrityError as e:
+        return False
+    except:
         return False
     sendValidationEmail(email, userid)
     return True
@@ -16,6 +18,32 @@ def sendValidationEmail(email, userid):
     valCode = uuid.uuid4()
     #store code, send email with url to endpoint corresponding to code
 
-def checkLoginExists(username):
-    data, col = db.getUserInfo(username=username)
-    return len(data) > 0
+def generateToken(userid):
+    newToken = uuid.uuid4()
+    try:
+        db.insertNewAuth(userid, newToken)
+        return newToken
+    except:
+        return False
+
+# def checkToken(token):
+#     try:
+        
+
+def getPetData(token):
+    try:
+        pass
+    except:
+        return False
+
+def login(email, password):
+    data, col = db.getUserInfo(email=email)
+    pwI = col.index("password")
+    i = col.index("id")
+    if len(data) == 1:
+        pw = data[0][pwI]
+        if utils.checkPassword(password, pw):
+            token = generateToken(data[0][i])
+            return token
+        
+    return False

@@ -5,6 +5,28 @@ def getCursor():
     con = sqlite3.connect("test.sqlite")
     cursor = con.cursor()
     return cursor, con
+
+def submitQuery(query, params = None, cursor = None, con = None, noid = False):
+    if not cursor or not con:
+        cursor, con = getCursor()
+    if params:
+        cursor.execute(query, params)
+    else:
+        cursor.execute(query)
+    con.commit()
+    lastid = cursor.lastrowid if not noid else None
+    cursor.close()
+    con.close()
+    return lastid
+
+def select(query, params):
+    cursor, con = getCursor()
+    data = cursor.execute(query,params).fetchall()
+    col = getColumns(cursor)
+    cursor.close()
+    con.close()
+    return data, col
+    
 #Should return columns for latest cursor execute or None if latest execute was not a select
 def getColumns(cursor):
     return [description[0] for description in cursor.description] if cursor.description else None
@@ -17,25 +39,27 @@ def createTables():
     for query in queries:
         cursor.execute(query)
 
-def getUserInfo(id = None, username = None, email = None):
-    cursor, con = getCursor()
+def getUserInfo(id = None, email = None):
     if id:
-        query = f"SELECT * FROM users WHERE id = {id}"
-    elif username:
-        query = f"SELECT * FROM users WHERE username = '{username}'"
+        query = "SELECT * FROM users WHERE id = ?"
+        params = tuple([id])
     elif email:
-        query = f"SELECT * FROM users WHERE email = '{email}'"
+        query = "SELECT * FROM users WHERE email = ?"
+        params = tuple([email])
     else:
         return None
-    return cursor.execute(query).fetchall(), getColumns(cursor)
+    return select(query,params)
 
-def insertNewUser(username, password, email):
-    cursor, con = getCursor()
+def insertNewUser(email, password):
+    query = "INSERT INTO users (password,email,verified) VALUES (?, ?, 0);"
     hashedPw = utils.getHashedPassword(password)
-    query = f"INSERT INTO users (username,password,email,verified) VALUES ('{username}','{hashedPw.decode('utf-8')}', '{email}', 0);"
-    cursor.execute(query)
-    con.commit()
-    return cursor.lastrowid
+    return submitQuery(query, (hashedPw.decode('utf-8'), email))
+
+def insertNewAuth(userid, authkey):
+    return submitQuery(f"INSERT INTO validations (userid,validationstr) VALUES (?,?)", (userid, authkey))
+
+def cleanupAuths():
+    submitQuery("DELETE FROM validations WHERE CURRENT_TIMESTAMP < GETDATE()- 30", noid=True)
 
 def getData():
     cursor, con = getCursor()
@@ -44,8 +68,8 @@ def getData():
 
 if __name__ == "__main__":
     # createTables()
-    insertNewUser("test","testtest", "test@test.com")
     getData()
+    insertNewUser("te12asdf34st@test.com", "testtest")
     a, b = getUserInfo(id=1)
     print(a)
     print(b)

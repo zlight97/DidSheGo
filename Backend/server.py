@@ -4,6 +4,7 @@ from flask_cors import CORS
 import flask
 import json
 from time import time
+import DidSheGo as dsg
 
 app = Flask(__name__)
 CORS(app)
@@ -21,8 +22,12 @@ def login():
     if request.method == 'POST':
         data = request.get_json() # this should be a dict of params
         if "username" in data and "password" in data:
-            success = True
-            token = "test token"
+            try:
+                token = dsg.login(data["username"], data["password"])
+                if token:
+                    success = True
+            except:
+                return flask.jsonify({"success":False})
     return flask.jsonify({"success":success,"token":token})
 
 @app.route("/submitTime", methods = ['POST'])
