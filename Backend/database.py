@@ -1,5 +1,6 @@
 import sqlite3
 import utils
+import queries
 #TODO does this need to be threadsafe for flask?
 def getCursor():
     con = sqlite3.connect("test.sqlite")
@@ -41,30 +42,38 @@ def createTables():
 
 def getUserInfo(id = None, email = None):
     if id:
-        query = "SELECT * FROM users WHERE id = ?"
+        query = queries.selectUserId
         params = tuple([id])
     elif email:
-        query = "SELECT * FROM users WHERE email = ?"
+        query = queries.selectUserEmail
         params = tuple([email])
     else:
         return None
     return select(query,params)
 
 def insertNewUser(email, password):
-    query = "INSERT INTO users (password,email,verified) VALUES (?, ?, 0);"
     hashedPw = utils.getHashedPassword(password)
-    return submitQuery(query, (hashedPw.decode('utf-8'), email))
+    return submitQuery(queries.insertNewUser, (hashedPw.decode('utf-8'), email))
 
 def insertNewAuth(userid, authkey):
-    return submitQuery(f"INSERT INTO validations (userid,validationstr) VALUES (?,?)", (userid, authkey))
+    return submitQuery(queries.insertAuth, (userid, authkey))
 
 def cleanupAuths():
-    submitQuery("DELETE FROM validations WHERE CURRENT_TIMESTAMP < GETDATE()- 30", noid=True)
+    submitQuery(queries.cleanupAuths, noid=True)
+
+def getPetInfo(authkey):
+    cleanupAuths()
+    return select(queries.petinfo, (authkey,))
 
 def getData():
     cursor, con = getCursor()
     query = "SELECT * FROM users"
     print(cursor.execute(query).fetchall())
+
+def cleanTest():
+    createTables()
+    insertNewUser("te12asdf34st@test.com", "testtest")
+    a, b = getUserInfo(id=1)
 
 if __name__ == "__main__":
     # createTables()

@@ -32,8 +32,11 @@ def generateToken(userid):
 
 def getPetData(token):
     try:
-        pass
+        data, cols = db.getPetInfo(token)
     except:
+        return False
+    
+    if data == None or cols == None:
         return False
 
 def login(email, password):
