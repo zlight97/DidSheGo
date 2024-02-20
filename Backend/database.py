@@ -3,7 +3,7 @@ import utils
 import queries
 #TODO does this need to be threadsafe for flask?
 def getCursor():
-    con = sqlite3.connect("test.sqlite")
+    con = sqlite3.connect("test.sqlite",detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = con.cursor()
     return cursor, con
 
@@ -49,6 +49,10 @@ def getUserInfo(id = None, email = None):
     else:
         return None
     return select(query,params)
+
+def getUserId(auth):
+    query = queries.selectUserIdFromAuth
+    return select(query,(auth,))
 
 def insertNewUser(email, password):
     hashedPw = utils.getHashedPassword(password)

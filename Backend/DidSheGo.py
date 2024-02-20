@@ -2,6 +2,7 @@ import database as db
 import sqlite3
 import utils
 import uuid
+import datetime
 
 def createLogin(email, password):
     try:
@@ -12,6 +13,36 @@ def createLogin(email, password):
         return False
     sendValidationEmail(email, userid)
     return True
+
+def checkAuth(auth):
+    try:
+        data, col = db.getUserId(auth)
+    except:
+        return False
+    if len(data) != 1:
+        return False
+    userid = data[0][col.index("userid")]
+    time = data[0][col.index("timestamp")]
+    
+    if time.date < datetime.datetime.now()-datetime.timedelta(days=30):
+        db.cleanupAuths()
+        return False
+    if time.date < datetime.datetime.now()-datetime.timedelta(days=25):
+        if deleteAuth(auth):
+            auth = generateToken(userid)
+    return userid, auth
+
+def deleteAuth(auth):
+    try:
+        db.deleteAuth(auth)
+    except:
+        return False
+    return True
+    
+
+def createNewPet(token, petname):
+    if checkAuth(token):
+        pass
 
 def sendValidationEmail(email, userid):
     print("pretending to send a validation email")
@@ -29,15 +60,37 @@ def generateToken(userid):
 # def checkToken(token):
 #     try:
         
-
+#TODO test that this query gets the needed results
 def getPetData(token):
     try:
         data, cols = db.getPetInfo(token)
     except:
         return False
     
-    if data == None or cols == None:
+    if data == None or cols == None or len(data) < 1:
         return False
+    i = -1
+    for entry in cols:
+        i+= 1
+        if entry == "petname":
+            pNameI = i
+        elif entry == "petid":
+            pIdI = i
+        elif entry == "actionname":
+            aNameI = i
+        elif entry == "actionpos":
+            aPosI = i
+        elif entry == "latestaction":
+            timeI = i
+        elif entry == "actionid":#This is action type id
+            aIdI = i
+    dataMap = {}
+    for entry in data:
+        if entry[pIdI] not in dataMap:
+            dataMap[pIdI] = (entry[pNameI], [(entry[aIdI], entry[aNameI], entry[aPosI], entry[timeI])])
+        else:
+            dataMap[pIdI][1].append((entry[aIdI], entry[aNameI], entry[aPosI], entry[timeI]))
+    return dataMap
 
 def login(email, password):
     data, col = db.getUserInfo(email=email)
