@@ -35,9 +35,8 @@ def getColumns(cursor):
 #Only to be run as setup. Should be main of this file
 def createTables():
     cursor, con = getCursor()
-    with open("createTables.sql") as f:
-        queries = f.readlines()
-    for query in queries:
+    qs = queries.createTables
+    for query in qs:
         cursor.execute(query)
 
 def getUserInfo(id = None, email = None):
