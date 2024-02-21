@@ -58,11 +58,23 @@ def insertNewUser(email, password):
     hashedPw = utils.getHashedPassword(password)
     return submitQuery(queries.insertNewUser, (hashedPw.decode('utf-8'), email))
 
+def insertNewPet(userid, petname):
+    return submitQuery(queries.insertNewPet, (userid, petname,))
+
 def insertNewAuth(userid, authkey):
     return submitQuery(queries.insertAuth, (userid, authkey))
 
+def insertNewActionType(petid, actionName):
+    return submitQuery(queries.insertActionType, (petid, actionName, petid))
+
+def insertAction(typeid,time):
+    return submitQuery(queries.insertAction, (typeid, time))
+
 def cleanupAuths():
     submitQuery(queries.cleanupAuths, noid=True)
+
+def deleteAuth(auth):
+    submitQuery(queries.deleteAuth, (auth,))
 
 def getPetInfo(authkey):
     cleanupAuths()

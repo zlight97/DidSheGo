@@ -14,7 +14,7 @@ def createLogin(email, password):
     sendValidationEmail(email, userid)
     return True
 
-def checkAuth(auth):
+def checkAuthToken(auth):
     try:
         data, col = db.getUserId(auth)
     except:
@@ -38,11 +38,30 @@ def deleteAuth(auth):
     except:
         return False
     return True
-    
+
+def createNewAction(token, petid, actionName):
+    try: id, newToken = checkAuthToken(token)
+    except: return False
+    try: db.insertNewActionType(petid, actionName)
+    except: return False
+    return newToken
 
 def createNewPet(token, petname):
-    if checkAuth(token):
-        pass
+    try: id, newToken = checkAuthToken(token)
+    except: return False
+    try: db.insertNewPet(id, petname)
+    except: return False
+    return newToken
+
+def actionMarked(token, actionid, time):
+    try: id, newToken = checkAuthToken(token)
+    except: return False
+    if not time:
+        time = 'CURRENT_TIMESTAMP'
+    try: db.insertAction(actionid, time)
+    except: return False
+    return newToken
+    
 
 def sendValidationEmail(email, userid):
     print("pretending to send a validation email")
@@ -56,9 +75,6 @@ def generateToken(userid):
         return newToken
     except:
         return False
-
-# def checkToken(token):
-#     try:
         
 #TODO test that this query gets the needed results
 def getPetData(token):
