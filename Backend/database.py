@@ -2,8 +2,9 @@ import sqlite3
 import utils
 import queries
 #TODO does this need to be threadsafe for flask?
-def getCursor():
-    con = sqlite3.connect("test.sqlite",detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+DBNAME = "test.sqlite"
+def getCursor(db=DBNAME):
+    con = sqlite3.connect(db,detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = con.cursor()
     return cursor, con
 
@@ -33,8 +34,8 @@ def getColumns(cursor):
     return [description[0] for description in cursor.description] if cursor.description else None
 
 #Only to be run as setup. Should be main of this file
-def createTables():
-    cursor, con = getCursor()
+def createTables(db=DBNAME):
+    cursor, con = getCursor(db)
     qs = queries.createTables
     for query in qs:
         cursor.execute(query)
@@ -70,6 +71,12 @@ def insertNewActionType(petid, actionName):
 def insertAction(typeid,time):
     return submitQuery(queries.insertAction, (typeid, time))
 
+def authPet(auth):
+    return submitQuery(queries.validatePetInfo, (auth,))
+
+def authAction(auth):
+    return submitQuery(queries.validateAction, (auth,))
+
 def cleanupAuths():
     submitQuery(queries.cleanupAuths, noid=True)
 
@@ -89,6 +96,13 @@ def cleanTest():
     createTables()
     insertNewUser("te12asdf34st@test.com", "testtest")
     a, b = getUserInfo(id=1)
+
+def resetServer():
+    testFile = "test.sqlite"
+    import os
+    if os.path.exists(testFile):
+        os.remove(testFile)
+    createTables(testFile)
 
 if __name__ == "__main__":
     # createTables()
