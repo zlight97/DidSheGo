@@ -71,11 +71,11 @@ def insertNewActionType(petid, actionName):
 def insertAction(typeid,time):
     return submitQuery(queries.insertAction, (typeid, time))
 
-def authPet(auth):
-    return submitQuery(queries.validatePetInfo, (auth,))
+def authPet(auth, petid):
+    return select(queries.validatePetInfo, (auth, petid))
 
-def authAction(auth):
-    return submitQuery(queries.validateAction, (auth,))
+def authAction(auth, actionid):
+    return select(queries.validateAction, (auth,actionid))
 
 def cleanupAuths():
     submitQuery(queries.cleanupAuths, noid=True)

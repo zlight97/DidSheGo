@@ -35,16 +35,25 @@ def checkAuthToken(auth):
         return False
     userid = data[0][col.index("userid")]
     time = data[0][col.index("Timestamp")]
-    auth = isAuthValid(time,userid)
+    auth = isAuthValid(time,userid, auth)
     if not auth:
         return False
     return userid, auth
 
-def isAuthValid(time, userid):
-    if time.date < datetime.datetime.now()-datetime.timedelta(days=30):
+def isAuthValid(time, userid, auth):
+    if not isinstance(time, datetime.datetime):
+        import re
+        #'2024-03-05 04:41:48'
+        regexStr = r'([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)'
+        res = re.search(regexStr,time)
+        g = res.groups()
+        time = datetime.datetime(int(g[0]),int(g[1]),int(g[2]),int(g[3]),int(g[4]),int(g[5]))
+    #TODO fix this:
+    if time < datetime.datetime.now()-datetime.timedelta(days=30):
         db.cleanupAuths()
         return False
-    if time.date < datetime.datetime.now()-datetime.timedelta(days=25):
+    if time < datetime.datetime.now()-datetime.timedelta(days=25):
+        #TODO this auth needs to go
         if deleteAuth(auth):
             auth = generateToken(userid)
     return auth
@@ -52,11 +61,12 @@ def isAuthValid(time, userid):
 def checkPetId(token, petid):
     try:
         data, col = db.authPet(token, petid)
-    except:
+    except Exception as e:
+        print(e)
         return False
     if len(data) != 1:
         return False
-    return isAuthValid(data[0][col.index("timestamp")])
+    return isAuthValid(data[0][col.index("Timestamp")], data[0][col.index("userid")], token)
     
 def checkActionId(token, actionid):
     try:
@@ -77,7 +87,9 @@ def deleteAuth(auth):
 
 def createNewAction(token, petid, actionName):
     try: newToken = checkPetId(token, petid)
-    except: return False
+    except Exception as e: 
+        print(e)
+        return False
     try: 
         if newToken:
             actionid = db.insertNewActionType(petid, actionName)
