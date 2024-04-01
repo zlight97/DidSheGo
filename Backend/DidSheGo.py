@@ -11,9 +11,13 @@ def runTest():
     createLogin(email, password)
     token = str(login(email, password))
     token, petid = createNewPet(token, "testPet")
-    token, actionid = createNewAction(token, petid, "pee")
-    token = actionMarked(token, actionid)
+    token, actiontypeid = createNewAction(token, petid, "pee")
+    token, actionid = actionMarked(token, actiontypeid, datetime.datetime.now() -datetime.timedelta(days=30))
+    token, actionid = actionMarked(token, actiontypeid)
+    token = actionDeleted(token, actionid)
+    token, actionid = actionMarked(token, actiontypeid)
     db.getData()
+    print(getPetData(token))
 
 def createLogin(email, password):
     try:
@@ -68,6 +72,15 @@ def checkPetId(token, petid):
         return False
     return isAuthValid(data[0][col.index("Timestamp")], data[0][col.index("userid")], token)
     
+def checkActionTypeId(token, actiontypeid):
+    try:
+        data, col = db.authActionType(token, actiontypeid)
+    except:
+        return False
+    if len(data) != 1:
+        return False
+    return isAuthValid(data[0][col.index("Timestamp")], data[0][col.index("userid")], token)
+    
 def checkActionId(token, actionid):
     try:
         data, col = db.authAction(token, actionid)
@@ -75,7 +88,7 @@ def checkActionId(token, actionid):
         return False
     if len(data) != 1:
         return False
-    return isAuthValid(data[0][col.index("timestamp")])
+    return isAuthValid(data[0][col.index("Timestamp")], data[0][col.index("userid")], token)
     
 
 def deleteAuth(auth):
@@ -105,23 +118,36 @@ def createNewPet(token, petname):
     except: return False
     return newToken, petid
 
-#This doesnt have validation for token mapping to actionid
-#Should add petid as well, and validate petid to auth token
-def actionMarked(token, actionid, time = False):
+def actionDeleted(token, actionid):
     try: newToken = checkActionId(token, actionid)
-    except: return False
-    if not time:
-        time = datetime.now()
+    except Exception as e: 
+        print(e)
+        return False
     try: 
         if newToken:
-            db.insertAction(actionid, time)
+            db.deleteAction(actionid)
     except: return False
     return newToken
+
+#This doesnt have validation for token mapping to actionid
+#Should add petid as well, and validate petid to auth token
+def actionMarked(token, actiontypeid, time = False):
+    try: newToken = checkActionTypeId(token, actiontypeid)
+    except Exception as e: 
+        print(e)
+        return False
+    if not time:
+        time = datetime.datetime.now()
+    try: 
+        if newToken:
+            id = db.insertAction(actiontypeid, time)
+    except: return False
+    return newToken, id
     
 def sendValidationEmail(email, userid):
     print("pretending to send a validation email")
     valCode = uuid.uuid4()
-    #store code, send email with url to endpoint corresponding to code
+    #TODO store code, send email with url to endpoint corresponding to code
 
 def generateToken(userid):
     newToken = uuid.uuid4()
@@ -137,7 +163,8 @@ def generateToken(userid):
 def getPetData(token):
     try:
         data, cols = db.getPetInfo(token)
-    except:
+    except Exception as e:
+        print(e)
         return False
     
     if data == None or cols == None or len(data) < 1:

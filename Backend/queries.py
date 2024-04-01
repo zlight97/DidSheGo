@@ -8,14 +8,15 @@ createTables = ["CREATE TABLE users( id INTEGER PRIMARY KEY, email TEXT UNIQUE N
 "CREATE TABLE actiontype( id INTEGER PRIMARY KEY, petid INTEGER NOT NULL, name TEXT UNIQUE NOT NULL, position INTEGER UNIQUE, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (petid)    REFERENCES pets (id) )"]
 
 #Delete queries
-cleanupAuths = "DELETE FROM validations WHERE CURRENT_TIMESTAMP < GETDATE()- 30"
+cleanupAuths = "DELETE FROM validations WHERE CURRENT_TIMESTAMP < date()- 30"
 deleteAuth = "DELETE FROM validations WHERE validationstr = ?"
+deleteAction = "UPDATE actions set deleted = 1 WHERE actions.id = ?;"
 
 #Insert queries
 insertAuth = "INSERT INTO validations (userid,validationstr) VALUES (?,?);"
 insertNewUser = "INSERT INTO users (password,email,verified) VALUES (?, ?, 0);"
 insertNewPet = "INSERT INTO pets (userid,name) VALUES (?,?);"
-insertActionType = "INSERT INTO actiontype (petid,name,position) VALUES (?,?,(SELECT MAX(position) + 1 FROM actiontype WHERE petid=?));"
+insertActionType = "INSERT INTO actiontype (petid,name,position) VALUES (?,?,(SELECT ifnull(MAX(position) + 1,0) FROM actiontype WHERE petid=?));"
 insertAction = "INSERT INTO actions (typeid,deleted,Timestamp) VALUES (?,0,?);"
 
 #Select queries
@@ -43,7 +44,7 @@ SELECT guests.userid, petid FROM guests
 INNER JOIN pets as p ON p.id = petid ) allpets 
     ON allpets.userid = va.userid
 WHERE va.validationstr = ? AND petid = ?;"""
-validateAction = """SELECT va.id, act.id as actionid, va.Timestamp
+validateActionType = """SELECT va.id, act.id as actionid, va.Timestamp, va.userid
 FROM validations as va
 INNER JOIN
 ( SELECT userid, id as petid FROM pets
@@ -52,4 +53,15 @@ SELECT guests.userid, petid FROM guests
 INNER JOIN pets as p ON p.id = petid ) allpets 
     ON allpets.userid = va.userid
 INNER JOIN actiontype as act ON act.petid = allpets.petid
+WHERE va.validationstr = ? and actionid = ?;"""
+validateAction = """SELECT va.id, actions.id as actionid, va.Timestamp, va.userid
+FROM validations as va
+INNER JOIN
+( SELECT userid, id as petid FROM pets
+UNION ALL
+SELECT guests.userid, petid FROM guests
+INNER JOIN pets as p ON p.id = petid ) allpets 
+    ON allpets.userid = va.userid
+INNER JOIN actiontype as act ON act.petid = allpets.petid
+INNER JOIN actions ON actions.typeid = act.id
 WHERE va.validationstr = ? and actionid = ?;"""

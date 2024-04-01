@@ -74,8 +74,14 @@ def insertAction(typeid,time):
 def authPet(auth, petid):
     return select(queries.validatePetInfo, (auth, petid))
 
+def authActionType(auth, actiontypeid):
+    return select(queries.validateActionType, (auth,actiontypeid))
+    
 def authAction(auth, actionid):
     return select(queries.validateAction, (auth,actionid))
+
+def deleteAction(actionid):
+    return submitQuery(queries.deleteAction, (actionid,))
 
 def cleanupAuths():
     submitQuery(queries.cleanupAuths, noid=True)
@@ -90,7 +96,11 @@ def getPetInfo(authkey):
 def getData():
     cursor, con = getCursor()
     query = "SELECT * FROM users"
-    print(cursor.execute(query).fetchall())
+    print("Users:\n", cursor.execute(query).fetchall())
+    query = "SELECT * FROM actions"
+    print("Actions:\n", cursor.execute(query).fetchall())
+    query = "SELECT * FROM actiontype"
+    print("actiontype:\n", cursor.execute(query).fetchall())
 
 def cleanTest():
     createTables()
