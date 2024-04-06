@@ -5,3 +5,13 @@ __pycache__
 *.db
 *.sqlite
 .vscode
+.DS_Store
+Frontend/node_modules
+Frontend//build
+Frontend//.svelte-kit
+Frontend//package
+Frontend/.env
+Frontend/.env.*
+Frontend/!.env.example
+Frontend/vite.config.js.timestamp-*
+Frontend/vite.config.ts.timestamp-*

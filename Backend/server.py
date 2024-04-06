@@ -21,9 +21,9 @@ def login():
     token = ""
     if request.method == 'POST':
         data = request.get_json() # this should be a dict of params
-        if "username" in data and "password" in data:
+        if "email" in data and "password" in data:
             try:
-                token = dsg.login(data["username"], data["password"])
+                token = dsg.login(data["email"], data["password"])
                 if token:
                     success = True
             except:
