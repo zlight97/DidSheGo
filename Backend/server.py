@@ -5,6 +5,7 @@ import flask
 import json
 from time import time
 import DidSheGo as dsg
+import utils
 
 app = Flask(__name__)
 CORS(app)
@@ -39,10 +40,10 @@ def submitTime():
     if request.method == 'POST':
         data = request.get_json() # this should be a dict of params
         if "auth" in data and "id" in data and "time" in data:
-            if validateToken(data["auth"]):
+            token,_ = dsg.actionMarked(data["auth"],data["id"],utils.epochToDatetime(data['time']))
+            if token:
                 success = True
-                #update with time for pet id, use latest submitted user with id from validation table
-                pass
+            print("here")
     return flask.jsonify({"success":success,"token":token})
 
 @app.route("/logout", methods = ['POST'])

@@ -6,6 +6,11 @@ def getHashedPassword(pw):
 def checkPassword(pw, hash):
     return bcrypt.checkpw(bytes(pw, 'utf-8'), bytes(hash, 'utf-8'))
 
+def epochToDatetime(epoch):
+    from datetime import datetime
+    epoch = int(epoch/1000)
+    return datetime.fromtimestamp(epoch)
+
 def strToEpoch(dateStr):
     from datetime import datetime
     dt = getDatetime(dateStr)

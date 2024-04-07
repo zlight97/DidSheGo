@@ -13,3 +13,12 @@ export const logout = async () => {
     }
     goto('/login')
 }
+
+export function updateToken(token: string)
+{
+    let curAuth = localStorage.getItem('token')
+    if(token===curAuth)
+        return curAuth;
+    localStorage.setItem('token',token)
+    return token;
+}

@@ -91,3 +91,36 @@ export const sendLogout = async (auth: string) => {
 
 	return res;
 };
+
+export const submitTime = async (auth: string, actionId: number, time:EpochTimeStamp) => {
+	let error = null;
+
+	const res = await fetch(`${API_FULL_URL}/submitTime`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json; charset=UTF-8',
+            "Access-Control-Allow-Headers": "x-requested-with"
+		},
+		body: JSON.stringify({
+			auth: auth,
+			id: actionId,
+			time: time
+		})
+	})
+		.then(async (res) => {
+			if (!res.ok) throw await res.json();
+			return res.json();
+		})
+		.catch((err) => {
+			console.log(err);
+
+			error = err.detail;
+			return null;
+		});
+
+	if (error) {
+		throw error;
+	}
+
+	return res;
+};

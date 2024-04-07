@@ -21,13 +21,14 @@
       hoverColor = 'red'
     }
   }
-  function submitF(e) {
+  const submitF = async (e) => {
     submitting = true
-    console.log(id)
-    let tempTime: EpochTimeStamp = handleSubmit(id)
+    let tempTime: EpochTimeStamp = await handleSubmit(id)
+    console.log(tempTime)
     if(tempTime)
     {
       time = tempTime > time ? tempTime : time;
+      console.log(time)
       updateColors()
     }
     submitting = false

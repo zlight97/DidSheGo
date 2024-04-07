@@ -4,14 +4,15 @@
     import { token } from "$lib/stores"
     import Button from "./assets/Button.svelte";
     import PetButton from "./assets/PetButton.svelte";
-    import { getPetInfo } from "$lib/api";
-    import { logout } from "$lib/index"
+    import { getPetInfo, submitTime} from "$lib/api";
+    import { logout, updateToken } from "$lib/index"
     import Spinner from "./assets/Spinner.svelte";
 
     let submitting: boolean = false
     let tk : string | null;
     let pets : Object | null = null;
     let selectedPet = -1;
+    let selectedTime: EpochTimeStamp | null = null;
 
     onMount(async () => {
       tk = localStorage.getItem('token')
@@ -35,9 +36,17 @@
     });
     
 
-    function submitAction(val: number) {
-      console.log(token)
-      return Date.now()
+    const submitAction = async (actionId: number) => {
+      if(!tk)
+      {
+        logout()
+        return 0;
+      }
+      let resp = await submitTime(tk,actionId,selectedTime?selectedTime:Date.now())
+      if(!resp || !resp.success)
+        return 0;
+      tk = updateToken(resp.token)
+      return selectedTime?selectedTime:Date.now()
     }
 
     function selectPet(val: number) {
