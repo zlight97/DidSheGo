@@ -2,6 +2,8 @@
     import Field from "../assets/Field.svelte"
     import { blur } from "svelte/transition"
     import { userSignIn } from "$lib/api"
+    import { goto } from "$app/navigation"
+    import { token } from "$lib/stores"
 
     let email = ""
     let password = ""
@@ -18,8 +20,8 @@
         console.log(sessionUser);
         console.log(`You're now logged in.`);
         localStorage.token = sessionUser.token;
-        // await user.set(sessionUser);
-        // goto('/');
+        await token.set(sessionUser);
+        goto('/');
       }
     };
 
