@@ -6,6 +6,7 @@
     import PetButton from "./assets/PetButton.svelte";
     import { getPetInfo } from "$lib/api";
     import { logout } from "$lib/index"
+    import Spinner from "./assets/Spinner.svelte";
 
     let submitting: boolean = false
     let tk : string | null;
@@ -90,7 +91,7 @@
       </footer>
       {/if}
     {:else}
-      loading
+      <Spinner />
     {/if}
   </section>
   
