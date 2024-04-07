@@ -13,10 +13,12 @@ def runTest():
     token, petid = createNewPet(token, "testPet")
     token, actiontypeid = createNewAction(token, petid, "pee")
     token, actionid = actionMarked(token, actiontypeid, datetime.datetime.now() -datetime.timedelta(days=30))
+    token, actiontypeid = createNewAction(token, petid, "poop")
     token, actionid = actionMarked(token, actiontypeid)
-    token = actionDeleted(token, actionid)
+    # token = actionDeleted(token, actionid)
     token, actionid = actionMarked(token, actiontypeid)
-    db.getData()
+    # db.getData()
+    token = str(login(email, password))
     print(getPetData(token))
 
 def createLogin(email, password):
@@ -46,12 +48,7 @@ def checkAuthToken(auth):
 
 def isAuthValid(time, userid, auth):
     if not isinstance(time, datetime.datetime):
-        import re
-        #'2024-03-05 04:41:48'
-        regexStr = r'([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)'
-        res = re.search(regexStr,time)
-        g = res.groups()
-        time = datetime.datetime(int(g[0]),int(g[1]),int(g[2]),int(g[3]),int(g[4]),int(g[5]))
+        time = utils.getDatetime(time)
     #TODO fix this:
     if time < datetime.datetime.now()-datetime.timedelta(days=30):
         db.cleanupAuths()
@@ -187,9 +184,9 @@ def getPetData(token):
     dataMap = {}
     for entry in data:
         if entry[pIdI] not in dataMap:
-            dataMap[pIdI] = (entry[pNameI], [(entry[aIdI], entry[aNameI], entry[aPosI], entry[timeI])])
+            dataMap[pIdI] = (entry[pNameI], [{"id":entry[aIdI], "name":entry[aNameI], "pos":entry[aPosI], "time":utils.strToEpoch(entry[timeI])}])
         else:
-            dataMap[pIdI][1].append((entry[aIdI], entry[aNameI], entry[aPosI], entry[timeI]))
+            dataMap[pIdI][1].append({"id":entry[aIdI], "name":entry[aNameI], "pos":entry[aPosI], "time":utils.strToEpoch(entry[timeI])})
     return dataMap
 
 def login(email, password):

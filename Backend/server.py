@@ -12,8 +12,9 @@ CORS(app)
 def validateToken(token):
     return "test" in token
 
-def getPetData():
-    return flask.jsonify({'Gracie':[('pee',1,int(time()) - 30000000),('poop',2,int(time()))]})
+def getPetData(token):
+    data = flask.jsonify(dsg.getPetData(token))
+    return data
 
 @app.route("/submitlogin", methods = ['POST'])
 def login():
@@ -49,10 +50,9 @@ def getPets():
     response = flask.jsonify()
     response.headers.add('Access-Control-Allow-Origin', '*')
     if request.method == "GET":
-        data = request.headers.get('Access-Token')
-        print(data)
-        if validateToken(data):
-            response= getPetData()
+        token = request.headers.get('Access-Token')
+        print(token)
+        response = getPetData(token)
     print(request)
     return response
 

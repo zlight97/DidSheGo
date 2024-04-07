@@ -4,37 +4,20 @@
   export let submitting : boolean = false
   export let handleSubmit: (val: number) => EpochTimeStamp
   export let id : number = -1
-  export let time: EpochTimeStamp = 123;
   let color : string;
   let hoverColor : string;
   onMount(updateColors)
   function updateColors()
   {
-    console.log(time)
-    if(time > Date.now()-3600000)
-    {
-      color = '#00b460';
-      hoverColor = '#006400';
-    }
-    else{
-      color = 'black'
-      hoverColor = 'red'
-    }
+    color = 'black'
+    hoverColor = 'red'
   }
   function submitF(e) {
-    submitting = true
-    console.log(id)
-    let tempTime: EpochTimeStamp = handleSubmit(id)
-    if(tempTime)
-    {
-      time = tempTime > time ? tempTime : time;
-      updateColors()
-    }
-    submitting = false
+    handleSubmit(id)
   }
 </script>
 <button style="--button-color: {color}; --button-hover: {hoverColor}"
- on:click|preventDefault={submitF} disabled={submitting}>{label}. Last: {((Date.now()-time)/3600000).toFixed(2)}h ago.</button>
+ on:click|preventDefault={submitF} disabled={submitting}>{label}</button>
 
 <style lang="postcss">
   button {

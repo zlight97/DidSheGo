@@ -34,7 +34,8 @@ INNER JOIN pets as p ON p.id = petid ) allpets
 INNER JOIN actiontype as act ON act.petid = allpets.petid
 INNER JOIN actions ON actions.typeid = act.id
 WHERE va.validationstr = ? AND actions.deleted = 0
-GROUP BY actionid;"""
+GROUP BY actionid
+ORDER BY act.position;"""
 validatePetInfo = """SELECT va.id, allpets.petid, allpets.userid, va.Timestamp
 FROM validations as va
 INNER JOIN

@@ -29,6 +29,7 @@ declare module '$env/static/private' {
 	export const SHELL: string;
 	export const npm_command: string;
 	export const LSCOLORS: string;
+	export const USER_ZDOTDIR: string;
 	export const npm_config_userconfig: string;
 	export const COLORTERM: string;
 	export const npm_config_cache: string;
@@ -55,6 +56,7 @@ declare module '$env/static/private' {
 	export const VSCODE_GIT_ASKPASS_NODE: string;
 	export const XDG_GREETER_DATA_DIR: string;
 	export const MOTD_SHOWN: string;
+	export const VSCODE_INJECTION: string;
 	export const HOME: string;
 	export const LANG: string;
 	export const LS_COLORS: string;
@@ -72,6 +74,7 @@ declare module '$env/static/private' {
 	export const npm_package_name: string;
 	export const ZSH: string;
 	export const npm_config_prefix: string;
+	export const ZDOTDIR: string;
 	export const USER: string;
 	export const VSCODE_GIT_IPC_HANDLE: string;
 	export const VISUAL: string;
@@ -136,6 +139,7 @@ declare module '$env/dynamic/private' {
 		SHELL: string;
 		npm_command: string;
 		LSCOLORS: string;
+		USER_ZDOTDIR: string;
 		npm_config_userconfig: string;
 		COLORTERM: string;
 		npm_config_cache: string;
@@ -162,6 +166,7 @@ declare module '$env/dynamic/private' {
 		VSCODE_GIT_ASKPASS_NODE: string;
 		XDG_GREETER_DATA_DIR: string;
 		MOTD_SHOWN: string;
+		VSCODE_INJECTION: string;
 		HOME: string;
 		LANG: string;
 		LS_COLORS: string;
@@ -179,6 +184,7 @@ declare module '$env/dynamic/private' {
 		npm_package_name: string;
 		ZSH: string;
 		npm_config_prefix: string;
+		ZDOTDIR: string;
 		USER: string;
 		VSCODE_GIT_IPC_HANDLE: string;
 		VISUAL: string;
