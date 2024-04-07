@@ -1,24 +1,47 @@
 <script lang="ts">
-    import Field from "../Field.svelte"
+    import Field from "../assets/Field.svelte"
     import { blur } from "svelte/transition"
-    let username = ""
+    import { userSignIn } from "$lib/api"
+
+    let email = ""
     let password = ""
     let passwordValid: boolean = false
-    let usernameValid: boolean = false
+    let emailValid: boolean = false
     let submitting: boolean = false
     let valid = false
     $: {
-      valid = usernameValid && passwordValid
+      valid = emailValid && passwordValid
     }
-    function handleSubmit() {
-      submitting = true
-      console.log("username:", username)
-      console.log("password:", password)
-      // TODO: implement login logic here
-      setTimeout(() => {
-        submitting = false
-      }, 1000)
-    }
+
+    const setSessionUser = async (sessionUser) => {
+      if (sessionUser.success) {
+        console.log(sessionUser);
+        console.log(`You're now logged in.`);
+        localStorage.token = sessionUser.token;
+        // await user.set(sessionUser);
+        // goto('/');
+      }
+    };
+
+    // function handleSubmit() {
+    //   submitting = true
+    //   console.log("username:", username)
+    //   console.log("password:", password)
+    //   // TODO: implement login logic here
+    //   setTimeout(() => {
+    //     submitting = false
+    //   }, 1000)
+    // }
+
+    const handleSubmit = async () => {
+		const sessionUser = await userSignIn(email, password).catch((error) => {
+			console.log(error);
+			return null;
+		});
+
+		await setSessionUser(sessionUser);
+	};
+
     function handleValidateUsername(val: string) {
       return val?.length > 3
     }
@@ -31,10 +54,10 @@
     <form on:submit|preventDefault={handleSubmit}>
       <h1>Login</h1>
       <Field
-        label="Username"
+        label="Email"
         disabled={submitting}
-        bind:value={username}
-        bind:valid={usernameValid}
+        bind:value={email}
+        bind:valid={emailValid}
         validate={handleValidateUsername} />
       <Field
         disabled={submitting}

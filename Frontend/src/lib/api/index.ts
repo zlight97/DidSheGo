@@ -3,10 +3,11 @@ import { API_BASE_URL } from '$lib/constants';
 export const userSignIn = async (email: string, password: string) => {
 	let error = null;
 
-	const res = await fetch(`${API_BASE_URL}/auths/signin`, {
+	const res = await fetch(`http://${API_BASE_URL}/submitlogin`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json; charset=UTF-8',
+            "Access-Control-Allow-Headers": "x-requested-with"
 		},
 		body: JSON.stringify({
 			email: email,

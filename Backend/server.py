@@ -19,6 +19,7 @@ def getPetData():
 def login():
     success = False
     token = ""
+    print("/submitlogin received")
     if request.method == 'POST':
         data = request.get_json() # this should be a dict of params
         if "email" in data and "password" in data:
