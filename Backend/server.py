@@ -45,6 +45,16 @@ def submitTime():
                 pass
     return flask.jsonify({"success":success,"token":token})
 
+@app.route("/logout", methods = ['POST'])
+def logout():
+    token = ""
+    if request.method == 'POST':
+        data = request.get_json() # this should be a dict of params
+        if "auth" in data:
+            return flask.jsonify({'success':dsg.deleteAuth(data["auth"])})
+    return flask.jsonify({'success':False})
+
+
 @app.route("/getpets", methods = ['GET'])
 def getPets():
     response = flask.jsonify()

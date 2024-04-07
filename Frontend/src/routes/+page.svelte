@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { blur } from "svelte/transition"
-    import { goto } from "$app/navigation"
     import { token } from "$lib/stores"
     import Button from "./assets/Button.svelte";
     import PetButton from "./assets/PetButton.svelte";
@@ -73,6 +72,12 @@
           label="↩"
           handleSubmit={selectPet}
         />
+        <PetButton
+          id=-1
+          label="Logout"
+          handleSubmit={logout}
+        />
+        
       {/if}
     {:else}
       loading
