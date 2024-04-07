@@ -57,6 +57,15 @@
             handleSubmit={selectPet}
           />
           {/each}
+
+          <footer style="margin-left: 6%">
+          <PetButton
+          id=-1
+          label="Logout"
+          handleSubmit={logout}
+          />
+
+          </footer>
       {:else}
         {#each pets[selectedPet][1] as v}
           <Button
@@ -67,6 +76,7 @@
             handleSubmit={submitAction}
           />
         {/each}
+        <footer>
         <PetButton
           id=-1
           label="↩"
@@ -77,7 +87,7 @@
           label="Logout"
           handleSubmit={logout}
         />
-        
+      </footer>
       {/if}
     {:else}
       loading
@@ -90,4 +100,13 @@
       width: 300px;
       display:grid
     }
+    footer {
+      position:absolute;
+      bottom:0;
+      width:100%;
+      height:60px;
+      max-width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+  }
   </style>
