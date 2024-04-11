@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   export let label: string
   export let submitting : boolean = false
-  export let handleSubmit: (val: number) => EpochTimeStamp
+  export let handleSubmit: (val: number) => void
   export let id : number = -1
   let color : string;
   let hoverColor : string;

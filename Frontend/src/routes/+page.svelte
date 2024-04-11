@@ -53,7 +53,7 @@
       selectedPet = val;
     }
 
-  </script>
+</script>
   
   <section transition:blur={{ delay: 300, duration: 800 }}>
 
@@ -86,6 +86,7 @@
             handleSubmit={submitAction}
           />
         {/each}
+        
         <footer>
         <PetButton
           id=-1

@@ -33,6 +33,7 @@ declare module '$env/static/private' {
 	export const npm_config_userconfig: string;
 	export const COLORTERM: string;
 	export const npm_config_cache: string;
+	export const LESS: string;
 	export const XDG_SESSION_PATH: string;
 	export const TERM_PROGRAM_VERSION: string;
 	export const I3SOCK: string;
@@ -143,6 +144,7 @@ declare module '$env/dynamic/private' {
 		npm_config_userconfig: string;
 		COLORTERM: string;
 		npm_config_cache: string;
+		LESS: string;
 		XDG_SESSION_PATH: string;
 		TERM_PROGRAM_VERSION: string;
 		I3SOCK: string;
