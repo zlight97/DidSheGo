@@ -7,6 +7,8 @@
     import { getPetInfo, submitTime} from "$lib/api";
     import { logout, updateToken } from "$lib/index"
     import Spinner from "./assets/Spinner.svelte";
+    import { goto } from "$app/navigation";
+    import NewButton from "./assets/NewButton.svelte";
 
     let submitting: boolean = false
     let tk : string | null;
@@ -14,7 +16,8 @@
     let selectedPet = -1;
     let selectedTime: EpochTimeStamp | null = null;
 
-    onMount(async () => {
+    
+    const getData = async () => {
       tk = localStorage.getItem('token')
       if(tk)
       {
@@ -33,9 +36,10 @@
       {
         logout()
       }
-    });
-    
+    }
 
+    onMount(getData);
+    
     const submitAction = async (actionId: number) => {
       if(!tk)
       {
@@ -51,6 +55,11 @@
 
     function selectPet(val: number) {
       selectedPet = val;
+    }
+
+    function goBack(val: number){
+      getData();
+      selectPet(val);
     }
 
 </script>
@@ -88,10 +97,11 @@
         {/each}
         
         <footer>
+        <NewButton />
         <PetButton
           id=-1
           label="↩"
-          handleSubmit={selectPet}
+          handleSubmit={goBack}
         />
         <PetButton
           id=-1
