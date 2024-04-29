@@ -4,7 +4,7 @@
     import { token } from "$lib/stores"
     import Button from "./assets/Button.svelte";
     import PetButton from "./assets/PetButton.svelte";
-    import { getPetInfo, submitTime} from "$lib/api";
+    import { getPetInfo, submitTime, createNewAction} from "$lib/api";
     import { logout, updateToken } from "$lib/index"
     import Spinner from "./assets/Spinner.svelte";
     import { goto } from "$app/navigation";
@@ -53,6 +53,17 @@
       return selectedTime?selectedTime:Date.now()
     }
 
+    const newAction = async (newAction: string) => {
+      if(!tk)
+      {
+        logout()
+        return 0;
+      }
+      let resp = await createNewAction(newAction,selectedPet, tk)
+      if(!resp || !resp.success)
+        return 0
+    }
+
     function selectPet(val: number) {
       selectedPet = val;
     }
@@ -70,7 +81,7 @@
       {#if selectedPet < 0}
           {#each Object.entries(pets) as [key,value]}
             <PetButton
-            id={key}
+            id={Number(key)}
             label={value[0]}
             submitting={submitting}
             handleSubmit={selectPet}
@@ -95,9 +106,10 @@
             handleSubmit={submitAction}
           />
         {/each}
-        
+        <NewButton 
+          handleSubmit={newAction}
+        />
         <footer>
-        <NewButton />
         <PetButton
           id=-1
           label="↩"

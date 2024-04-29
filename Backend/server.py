@@ -43,7 +43,6 @@ def submitTime():
             token,_ = dsg.actionMarked(data["auth"],data["id"],utils.epochToDatetime(data['time']))
             if token:
                 success = True
-            print("here")
     return flask.jsonify({"success":success,"token":token})
 
 @app.route("/logout", methods = ['POST'])
@@ -67,5 +66,14 @@ def getPets():
     print(request)
     return response
 
+@app.route("/newaction", methods = ['POST'])
+def newAction():
+    token = ""
+    if request.method == 'POST':
+        data = request.get_json() # this should be a dict of params
+        if "auth" in data and "petid" in data and "action" in data:
+            return flask.jsonify({'success':dsg.deleteAuth(data["auth"],data["petid"], data["action"])})
+    return flask.jsonify({'success':False})    
+    
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

@@ -1,10 +1,11 @@
 <script lang="ts">
-  let color: string = 'black';
-  let hoverColor: string = 'red';
+  export let color: string = 'black';
+  export let hoverColor: string = 'red';
+  export let textColor: string = 'white';
+  export let handleSubmit: (val: string) => void
   let state = false;
   let label: string = "Add new";
   let value: string = "";
-  let submittedValue : string = "";
 
   function clicked()
   {
@@ -13,42 +14,54 @@
 
   function entered()
   {
-    submittedValue = value;
-    console.log(value) 
+    // console.log(value) 
     state = false;
+    handleSubmit(value)
   }
 
-  const handleInput = async (e) =>{
-    value = e.target.value
-    console.log(value)
-    // state = false
-  }
+
+  function onKeyDown(e) {
+    if(state)
+		 switch(e.keyCode) {
+      case 13:
+        state=false
+        if(value!="")
+        {
+          entered();
+        }
+        break;
+      case 27:
+        value = ""
+        state=false
+        break;
+		 }
+	}
 </script>
 
 {#if !state}
-<button style="--button-color: {color}; --button-hover: {hoverColor}"
+<button style="--button-color: {color}; --button-hover: {hoverColor}; --text-color: {textColor};"
  on:click|preventDefault={clicked} disabled={state}>{label}</button>
  {:else}
- <form on:submit|preventDefault={entered}><input bind:value={value} on:input={handleInput} /></form>
+<input style="--button-color: {color}; --button-hover: {hoverColor}; --text-color: {textColor};" bind:value={value}/>
  {/if}
 
 <style lang="postcss">
   input {
       margin-top: 1rem;
-      background: black;
-      color: white;
+      background: var(--button-color);
+      color: var(--text-color);
       border-radius: 0.25rem;
       border: 0 none;
       font-size: 18px;
       padding: 0.6rem 1.2rem;
     }
   input:hover{
-      background: red;
+      background: var(--button-hover);
   }
   button {
       margin-top: 1rem;
       background: var(--button-color);
-      color: white;
+      color: var(--text-color);
       border-radius: 0.25rem;
       border: 0 none;
       font-size: 18px;
@@ -61,3 +74,5 @@
     background: #ddd;
   }
 </style>
+
+<svelte:window on:keydown={onKeyDown} />
