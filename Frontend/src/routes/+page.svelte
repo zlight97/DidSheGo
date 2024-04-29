@@ -59,9 +59,10 @@
         logout()
         return 0;
       }
-      let resp = await createNewAction(newAction,selectedPet, tk)
+      let resp = await createNewAction(newAction,selectedPet, tk);
       if(!resp || !resp.success)
         return 0
+      getData();
     }
 
     function selectPet(val: number) {

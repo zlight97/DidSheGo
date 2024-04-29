@@ -72,7 +72,10 @@ def newAction():
     if request.method == 'POST':
         data = request.get_json() # this should be a dict of params
         if "auth" in data and "petid" in data and "action" in data:
-            return flask.jsonify({'success':dsg.deleteAuth(data["auth"],data["petid"], data["action"])})
+            try:
+                token, actionid = dsg.createNewAction(data["auth"],data["petid"], data["action"])
+                return flask.jsonify({'success':True})
+            except: pass
     return flask.jsonify({'success':False})    
     
 if __name__ == "__main__":

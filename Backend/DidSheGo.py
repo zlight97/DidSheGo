@@ -95,6 +95,13 @@ def deleteAuth(auth):
         return False
     return True
 
+def getActionId(petid, actionName):
+    try:
+        actionid = db.getActionId(petid, actionName)
+    except:
+        return False
+    return actionid
+
 def createNewAction(token, petid, actionName):
     try: newToken = checkPetId(token, petid)
     except Exception as e: 
@@ -102,8 +109,18 @@ def createNewAction(token, petid, actionName):
         return False
     try: 
         if newToken:
+            print('asdf')
             actionid = db.insertNewActionType(petid, actionName)
-    except: return False
+            print('fdsa')
+    except: pass
+    if newToken:
+        try:
+            actionid = getActionId(petid, actionName)
+            print(actionid[0][0][0])
+            actionMarked(token, actionid[0][0][0])
+        except Exception as e:
+            print(e)
+            return False
     return newToken, actionid
 
 def createNewPet(token, petname):

@@ -93,6 +93,9 @@ def getPetInfo(authkey):
     cleanupAuths()
     return select(queries.petinfo, (authkey,))
 
+def getActionId(petid, actionName):
+    return select(queries.selectActionId,(petid,actionName))
+
 def getData():
     cursor, con = getCursor()
     query = "SELECT * FROM users"
