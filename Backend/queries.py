@@ -24,6 +24,15 @@ selectUserId = "SELECT * FROM users WHERE id = ?;"
 selectUserEmail = "SELECT * FROM users WHERE email = ?;"
 selectUserIdFromAuth = "SELECT userid, timestamp from validations WHERE validationstr = ?;"
 selectActionId = "SELECT id FROM actiontype WHERE petid = ? AND name = ?;"
+selectPetList = """SELECT allpets.name as petname, allpets.petid
+FROM validations as va
+INNER JOIN
+( SELECT userid, id as petid, name FROM pets
+UNION ALL
+SELECT guests.userid, petid, p.name FROM guests
+INNER JOIN pets as p ON p.id = petid ) allpets 
+    ON allpets.userid = va.userid
+WHERE va.validationstr = ?;"""
 petinfo = """SELECT allpets.name as petname, allpets.petid, act.name as actionname, act.position as actionpos, max(actions.Timestamp) as latestaction, act.id as actionid
 FROM validations as va
 INNER JOIN

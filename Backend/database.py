@@ -93,6 +93,9 @@ def getPetInfo(authkey):
     cleanupAuths()
     return select(queries.petinfo, (authkey,))
 
+def getOnlyPetInfo(authkey):
+    return select(queries.selectPetList, (authkey,))
+
 def getActionId(petid, actionName):
     return select(queries.selectActionId,(petid,actionName))
 

@@ -29,6 +29,7 @@ declare module '$env/static/private' {
 	export const SHELL: string;
 	export const npm_command: string;
 	export const LSCOLORS: string;
+	export const WINDOWID: string;
 	export const USER_ZDOTDIR: string;
 	export const npm_config_userconfig: string;
 	export const COLORTERM: string;
@@ -67,6 +68,7 @@ declare module '$env/static/private' {
 	export const XDG_SEAT_PATH: string;
 	export const INIT_CWD: string;
 	export const CHROME_DESKTOP: string;
+	export const ALACRITTY_SOCKET: string;
 	export const npm_lifecycle_script: string;
 	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 	export const npm_config_npm_version: string;
@@ -95,11 +97,13 @@ declare module '$env/static/private' {
 	export const npm_config_noproxy: string;
 	export const PATH: string;
 	export const npm_config_node_gyp: string;
+	export const ALACRITTY_LOG: string;
 	export const GDMSESSION: string;
 	export const ORIGINAL_XDG_CURRENT_DESKTOP: string;
 	export const DBUS_SESSION_BUS_ADDRESS: string;
 	export const npm_config_global_prefix: string;
 	export const MAIL: string;
+	export const ALACRITTY_WINDOW_ID: string;
 	export const npm_node_execpath: string;
 	export const npm_config_engine_strict: string;
 	export const OLDPWD: string;
@@ -140,6 +144,7 @@ declare module '$env/dynamic/private' {
 		SHELL: string;
 		npm_command: string;
 		LSCOLORS: string;
+		WINDOWID: string;
 		USER_ZDOTDIR: string;
 		npm_config_userconfig: string;
 		COLORTERM: string;
@@ -178,6 +183,7 @@ declare module '$env/dynamic/private' {
 		XDG_SEAT_PATH: string;
 		INIT_CWD: string;
 		CHROME_DESKTOP: string;
+		ALACRITTY_SOCKET: string;
 		npm_lifecycle_script: string;
 		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 		npm_config_npm_version: string;
@@ -206,11 +212,13 @@ declare module '$env/dynamic/private' {
 		npm_config_noproxy: string;
 		PATH: string;
 		npm_config_node_gyp: string;
+		ALACRITTY_LOG: string;
 		GDMSESSION: string;
 		ORIGINAL_XDG_CURRENT_DESKTOP: string;
 		DBUS_SESSION_BUS_ADDRESS: string;
 		npm_config_global_prefix: string;
 		MAIL: string;
+		ALACRITTY_WINDOW_ID: string;
 		npm_node_execpath: string;
 		npm_config_engine_strict: string;
 		OLDPWD: string;

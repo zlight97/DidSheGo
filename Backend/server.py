@@ -77,6 +77,18 @@ def newAction():
                 return flask.jsonify({'success':True})
             except: pass
     return flask.jsonify({'success':False})    
-    
+
+@app.route("/newpet", methods = ['POST'])
+def newPet():
+    token = ""
+    if request.method == 'POST':
+        data = request.get_json() # this should be a dict of params
+        if "auth" in data and "petname" in data:
+            try:
+                token, actionid = dsg.createNewPet(data["auth"], data["petname"])
+                return flask.jsonify({'success':True})
+            except: pass
+    return flask.jsonify({'success':False})   
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

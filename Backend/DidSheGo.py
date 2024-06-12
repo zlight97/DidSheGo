@@ -110,12 +110,13 @@ def createNewAction(token, petid, actionName):
     try: 
         if newToken:
             print('asdf')
-            actionid = db.insertNewActionType(petid, actionName)
+            actionid = db.insertNewActionType(petid, actionName) #Action needs default position
             print('fdsa')
-    except: pass
+    except Exception as e: print(e)
     if newToken:
         try:
             actionid = getActionId(petid, actionName)
+            print(actionid)
             print(actionid[0][0][0])
             actionMarked(token, actionid[0][0][0])
         except Exception as e:
@@ -155,6 +156,8 @@ def actionMarked(token, actiontypeid, time = False):
     try: 
         if newToken:
             id = db.insertAction(actiontypeid, time)
+        else:
+            id = None
     except: return False
     return newToken, id
     
@@ -177,6 +180,7 @@ def generateToken(userid):
 def getPetData(token):
     try:
         data, cols = db.getPetInfo(token)
+        noActionData, noActionCols = db.getOnlyPetInfo(token)
     except Exception as e:
         print(e)
         return False
@@ -201,9 +205,12 @@ def getPetData(token):
     dataMap = {}
     for entry in data:
         if entry[pIdI] not in dataMap:
-            dataMap[pIdI] = (entry[pNameI], [{"id":entry[aIdI], "name":entry[aNameI], "pos":entry[aPosI], "time":utils.strToEpoch(entry[timeI])}])
+            dataMap[entry[pIdI]] = (entry[pNameI], [{"id":entry[aIdI], "name":entry[aNameI], "pos":entry[aPosI], "time":utils.strToEpoch(entry[timeI])}])
         else:
-            dataMap[pIdI][1].append({"id":entry[aIdI], "name":entry[aNameI], "pos":entry[aPosI], "time":utils.strToEpoch(entry[timeI])})
+            dataMap[entry[pIdI]][1].append({"id":entry[aIdI], "name":entry[aNameI], "pos":entry[aPosI], "time":utils.strToEpoch(entry[timeI])})
+    for entry in noActionData:
+        if entry[pIdI] not in dataMap:
+            dataMap[entry[pIdI]] = (entry[pNameI], [{"id":-1, "name":"", "pos":-1, "time":-1}])
     return dataMap
 
 def login(email, password):
