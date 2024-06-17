@@ -12,7 +12,7 @@
     color = 'black'
     hoverColor = 'red'
   }
-  function submitF(e) {
+  function submitF(e: any) {
     handleSubmit(id)
   }
 </script>

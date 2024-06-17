@@ -6,8 +6,9 @@
   export let validate: (val: string) => boolean
   export let valid: boolean = false
   let id = `field-${Math.floor(Math.random() * 1000)}`
-  function handleInput(e) {
-    value = e.target.value
+  function handleInput(e: Event) {
+    const target = e.target as HTMLSelectElement;
+    value = target.value
     if (validate) valid = validate(value)
   }
 </script>

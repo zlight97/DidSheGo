@@ -5,15 +5,15 @@
     import Button from "./assets/Button.svelte";
     import PetButton from "./assets/PetButton.svelte";
     import { getPetInfo, submitTime, createNewAction, createNewPet} from "$lib/api";
-    import { logout, updateToken } from "$lib/index"
+    import { logout, updateToken, type NumberDataTuple, type PetInfo } from "$lib/index"
     import Spinner from "./assets/Spinner.svelte";
     import { goto } from "$app/navigation";
     import NewButton from "./assets/NewButton.svelte";
 
     let submitting: boolean = false
     let tk : string | null;
-    let pets : Object | null = null;
-    let selectedPet = -1;
+    let pets : PetInfo | null = null;
+    let selectedPet: number = -1;
     let selectedTime: EpochTimeStamp | null = null;
 
     
@@ -112,7 +112,6 @@
 
           <footer style="margin-left: 6%">
           <PetButton
-          id=-1
           label="Logout"
           handleSubmit={logout}
           />

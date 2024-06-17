@@ -20,9 +20,9 @@
   }
 
 
-  function onKeyDown(e) {
+  function onKeyDown(e: KeyboardEvent) {
     if(state)
-		 switch(e.keyCode) {
+		 switch(e.keyCode) { //TODO use an undepricated version of this
       case 13:
         state=false
         if(value!="")

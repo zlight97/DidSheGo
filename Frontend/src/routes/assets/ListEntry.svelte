@@ -16,8 +16,8 @@
     console.log(entry.time)
     if(entry.deleted){
       buttonLabel = 'Recover'
-      color = 'green'
-      hoverColor = 'black'
+      color = '#00b460';
+      hoverColor = '#006400';
     }
     else{
       buttonLabel = 'Delete'

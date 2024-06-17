@@ -4,6 +4,7 @@
     import { userSignIn } from "$lib/api"
     import { goto } from "$app/navigation"
     import { token } from "$lib/stores"
+    import type { Login } from "$lib";
 
     let email = ""
     let password = ""
@@ -15,7 +16,7 @@
       valid = emailValid && passwordValid
     }
 
-    const setSessionUser = async (sessionUser) => {
+    const setSessionUser = async (sessionUser: Login) => {
       if (sessionUser.success) {
         console.log(sessionUser);
         console.log(`You're now logged in.`);
@@ -36,12 +37,12 @@
     // }
 
     const handleSubmit = async () => {
-		const sessionUser = await userSignIn(email, password).catch((error) => {
-			console.log(error);
-			return null;
-		});
+      const sessionUser = await userSignIn(email, password).catch((error) => {
+        console.log(error);
+        return null;
+      });
 
-		await setSessionUser(sessionUser);
+      await setSessionUser(sessionUser);
 	};
 
     function handleValidateUsername(val: string) {

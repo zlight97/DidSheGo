@@ -9,6 +9,24 @@ export interface ActionEntry{
     deleted: boolean
 }
 
+export interface Login{
+    success: boolean,
+    token: string
+}
+
+export interface PetData{
+    id: number,
+    name: string,
+    pos: number,
+    time: number
+}
+
+// export interface NumberDataTuple extends Array<string|PetData>{0:string; 1:PetData}
+export type NumberDataTuple = [string, Array<PetData>]
+export interface PetInfo{
+    [key: number]: NumberDataTuple
+}
+
 export const logout = async () => {
     let auth = localStorage.getItem('token');
     if(auth)

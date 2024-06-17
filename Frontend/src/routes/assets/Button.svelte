@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   export let label: string
   export let submitting : boolean = false
-  export let handleSubmit: (val: number) => EpochTimeStamp
+  export let handleSubmit: (val: number) => Promise<EpochTimeStamp>
   export let id : number = -1
   export let time: EpochTimeStamp = 123;
   let color : string;
@@ -21,7 +21,7 @@
       hoverColor = 'red'
     }
   }
-  const submitF = async (e) => {
+  const submitF = async (e: any) => {
     submitting = true
     let tempTime: EpochTimeStamp = await handleSubmit(id)
     console.log(tempTime)
