@@ -10,6 +10,7 @@ createTables = ["CREATE TABLE users( id INTEGER PRIMARY KEY, email TEXT UNIQUE N
 #Delete queries
 cleanupAuths = "DELETE FROM validations WHERE CURRENT_TIMESTAMP < date()- 30"
 deleteAuth = "DELETE FROM validations WHERE validationstr = ?"
+invertAction = "UPDATE actions set deleted = (SELECT NOT deleted) WHERE actions.id = ?"
 deleteAction = "UPDATE actions set deleted = 1 WHERE actions.id = ?;"
 
 #Insert queries
@@ -33,6 +34,19 @@ SELECT guests.userid, petid, p.name FROM guests
 INNER JOIN pets as p ON p.id = petid ) allpets 
     ON allpets.userid = va.userid
 WHERE va.validationstr = ?;"""
+selectAllActions = """SELECT actions.id, act.name as actionname, actions.Timestamp as time, actions.deleted
+FROM validations as va
+INNER JOIN
+( SELECT userid, id as petid FROM pets
+UNION ALL
+SELECT guests.userid, petid FROM guests
+INNER JOIN pets as p ON p.id = petid ) allpets 
+    ON allpets.userid = va.userid
+INNER JOIN actiontype as act ON act.petid = allpets.petid
+INNER JOIN actions ON actions.typeid = act.id
+WHERE va.validationstr = ? AND act.petid = ?
+ORDER BY time desc;
+"""
 petinfo = """SELECT allpets.name as petname, allpets.petid, act.name as actionname, act.position as actionpos, max(actions.Timestamp) as latestaction, act.id as actionid
 FROM validations as va
 INNER JOIN

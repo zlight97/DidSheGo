@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { blur } from "svelte/transition"
-    import { token } from "$lib/stores"
+    import { petlistid } from "$lib/stores"
     import Button from "./assets/Button.svelte";
     import PetButton from "./assets/PetButton.svelte";
     import { getPetInfo, submitTime, createNewAction, createNewPet} from "$lib/api";
@@ -86,6 +86,12 @@
       selectPet(val);
     }
 
+    function listPets(){
+      petlistid.set(selectedPet);
+      console.log('going to list')
+      goto('/list')
+    }
+
 </script>
   
   <section transition:blur={{ delay: 300, duration: 800 }}>
@@ -129,14 +135,16 @@
         />
         <footer>
         <PetButton
-          id=-1
           label="↩"
           handleSubmit={goBack}
         />
         <PetButton
-          id=-1
           label="Logout"
           handleSubmit={logout}
+        />
+        <PetButton
+          label="View All"
+          handleSubmit={listPets}
         />
       </footer>
       {/if}
@@ -152,7 +160,7 @@
       display:grid
     }
     footer {
-      position:absolute;
+      position:fixed;
       bottom:0;
       width:100%;
       height:60px;

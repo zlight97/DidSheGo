@@ -109,9 +109,7 @@ def createNewAction(token, petid, actionName):
         return False
     try: 
         if newToken:
-            print('asdf')
-            actionid = db.insertNewActionType(petid, actionName) #Action needs default position
-            print('fdsa')
+            actionid = db.insertNewActionType(petid, actionName)
     except Exception as e: print(e)
     if newToken:
         try:
@@ -133,14 +131,14 @@ def createNewPet(token, petname):
     except: return False
     return newToken, petid
 
-def actionDeleted(token, actionid):
+def actionInverted(token, actionid):
     try: newToken = checkActionId(token, actionid)
     except Exception as e: 
         print(e)
         return False
     try: 
         if newToken:
-            db.deleteAction(actionid)
+            db.invertAction(actionid)
     except: return False
     return newToken
 
@@ -212,6 +210,31 @@ def getPetData(token):
         if entry[pIdI] not in dataMap:
             dataMap[entry[pIdI]] = (entry[pNameI], [{"id":-1, "name":"", "pos":-1, "time":-1}])
     return dataMap
+
+def getAllActionData(token, petid):
+    try:
+        data, cols = db.getAllPetActions(token, petid)
+    except Exception as e:
+        print(e)
+        return False
+    
+    if data == None or cols == None or len(data) < 1:
+        return False
+    i = -1
+    for entry in cols:
+        i+= 1
+        if entry == "id":
+            aIdI = i
+        elif entry == "actionname":
+            aNameI = i
+        elif entry == "time":
+            timeI = i
+        elif entry == "deleted":
+            dI = i
+    dataList = []
+    for entry in data:
+        dataList.append({"actionid":entry[aIdI], "name":entry[aNameI], "time":entry[timeI], "deleted":entry[dI]==1})
+    return dataList
 
 def login(email, password):
     data, col = db.getUserInfo(email=email)

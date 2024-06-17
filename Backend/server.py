@@ -17,6 +17,10 @@ def getPetData(token):
     data = flask.jsonify(dsg.getPetData(token))
     return data
 
+def getAllActionData(token, petid):
+    data = flask.jsonify(dsg.getAllActionData(token, petid))
+    return data
+
 @app.route("/submitlogin", methods = ['POST'])
 def login():
     success = False
@@ -66,6 +70,19 @@ def getPets():
     print(request)
     return response
 
+@app.route("/getallactions", methods = ['POST'])
+def getAllActions():
+    response = flask.jsonify()
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    if request.method == 'POST':
+        data = request.get_json() # this should be a dict of params
+        if "auth" in data and "petid" in data :
+            try:
+                response = getAllActionData(data["auth"],data["petid"])
+            except: pass
+    print(request)
+    return response
+
 @app.route("/newaction", methods = ['POST'])
 def newAction():
     token = ""
@@ -74,6 +91,18 @@ def newAction():
         if "auth" in data and "petid" in data and "action" in data:
             try:
                 token, actionid = dsg.createNewAction(data["auth"],data["petid"], data["action"])
+                return flask.jsonify({'success':True})
+            except: pass
+    return flask.jsonify({'success':False})    
+
+@app.route("/updateaction", methods = ['POST'])
+def updateAction():
+    token = ""
+    if request.method == 'POST':
+        data = request.get_json() # this should be a dict of params
+        if "auth" in data  and "actionid" in data:
+            try:
+                token, actionid = dsg.actionInverted(data["auth"], data["actionid"])
                 return flask.jsonify({'success':True})
             except: pass
     return flask.jsonify({'success':False})    

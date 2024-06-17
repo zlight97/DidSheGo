@@ -55,6 +55,10 @@ def getUserId(auth):
     query = queries.selectUserIdFromAuth
     return select(query,(auth,))
 
+def getAllPetActions(auth, petid):
+    query = queries.selectAllActions
+    return select(query, (auth, petid))
+
 def insertNewUser(email, password):
     hashedPw = utils.getHashedPassword(password)
     return submitQuery(queries.insertNewUser, (hashedPw.decode('utf-8'), email))
@@ -82,6 +86,9 @@ def authAction(auth, actionid):
 
 def deleteAction(actionid):
     return submitQuery(queries.deleteAction, (actionid,))
+
+def invertAction(actionid):
+    return submitQuery(queries.invertAction, (actionid,))
 
 def cleanupAuths():
     submitQuery(queries.cleanupAuths, noid=True)

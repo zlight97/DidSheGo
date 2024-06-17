@@ -1,6 +1,14 @@
 // place files you want to import through the `$lib` alias in this folder.
 import { goto } from "$app/navigation"
 import { sendLogout } from "$lib/api"
+
+export interface ActionEntry{
+    actionid: number,
+    name: string,
+    time: number,
+    deleted: boolean
+}
+
 export const logout = async () => {
     let auth = localStorage.getItem('token');
     if(auth)
