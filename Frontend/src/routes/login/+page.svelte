@@ -5,12 +5,15 @@
     import { goto } from "$app/navigation"
     import { token } from "$lib/stores"
     import type { Login } from "$lib";
+    import { onMount } from "svelte";
 
     let email = ""
     let password = ""
     let passwordValid: boolean = false
     let emailValid: boolean = false
     let submitting: boolean = false
+    let save: boolean = false
+
     let valid = false
     $: {
       valid = emailValid && passwordValid
@@ -26,17 +29,28 @@
       }
     };
 
-    // function handleSubmit() {
-    //   submitting = true
-    //   console.log("username:", username)
-    //   console.log("password:", password)
-    //   // TODO: implement login logic here
-    //   setTimeout(() => {
-    //     submitting = false
-    //   }, 1000)
-    // }
+    onMount(() => {
+      let em = localStorage.getItem('email')
+      let pw = localStorage.getItem('password')
+      if(em && pw)
+      {
+        save = true;
+        email = em;
+        password = pw;
+        emailValid = handleValidateUsername(email)
+        passwordValid = handleValidatePassword(password);
+      }
+    })
 
     const handleSubmit = async () => {
+      if(save)
+      {
+        localStorage.email = email;
+        localStorage.password = password;
+      }else{
+        localStorage.removeItem("email");
+        localStorage.removeItem("password");
+      }
       const sessionUser = await userSignIn(email, password).catch((error) => {
         console.log(error);
         return null;
@@ -69,6 +83,8 @@
         type="password"
         bind:valid={passwordValid}
         validate={handleValidatePassword} />
+      <input type="checkbox" bind:checked={save} />
+      Remember me
       <p><button type="submit" disabled={!valid || submitting}>Login</button></p>
     </form>
   </section>

@@ -17,7 +17,7 @@
   {#if label}
     <label for={id}>{label}{#if valid}<span>✔</span>{/if}</label>
   {/if}
-  <input {disabled} {type} {id} on:input={handleInput} />
+  <input {disabled} {type} {id} on:input={handleInput} value={value}/>
 </p>
 
 <style lang="postcss">

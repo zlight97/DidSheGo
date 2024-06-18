@@ -29,6 +29,8 @@ export interface PetInfo{
 
 export const logout = async () => {
     let auth = localStorage.getItem('token');
+    // localStorage.removeItem('email')
+    // localStorage.removeItem('password')
     if(auth)
     {
         const sessionUser = await sendLogout(auth).catch((error) => {
