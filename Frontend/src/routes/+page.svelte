@@ -9,6 +9,7 @@
     import Spinner from "./assets/Spinner.svelte";
     import { goto } from "$app/navigation";
     import NewButton from "./assets/NewButton.svelte";
+    import Header from "./assets/Header.svelte";
 
     let submitting: boolean = false
     let tk : string | null;
@@ -93,7 +94,7 @@
     }
 
 </script>
-  
+  <Header/>
   <section transition:blur={{ delay: 300, duration: 800 }}>
 
     {#if pets}

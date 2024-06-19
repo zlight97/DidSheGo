@@ -8,6 +8,7 @@
     import Spinner from "../assets/Spinner.svelte";
     import { goto } from "$app/navigation";
     import ListEntry from "../assets/ListEntry.svelte";
+    import Header from "../assets/Header.svelte";
 
     let tk : string | null;
     let pets : Array<ActionEntry> | null = null;
@@ -45,7 +46,8 @@
     onMount(getData);
 
 </script>
-  
+<Header/>
+
 
 {#if pets}
   <section transition:blur={{ delay: 300, duration: 800 }}>

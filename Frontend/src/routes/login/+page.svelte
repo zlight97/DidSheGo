@@ -6,6 +6,7 @@
     import { token } from "$lib/stores"
     import type { Login } from "$lib";
     import { onMount } from "svelte";
+    import Header from "../assets/Header.svelte";
 
     let email = ""
     let password = ""
@@ -66,7 +67,7 @@
       return val?.length > 3
     }
   </script>
-  
+  <Header/>
   <section transition:blur={{ delay: 300, duration: 800 }}>
     <form on:submit|preventDefault={handleSubmit}>
       <h1>Login</h1>
