@@ -14,7 +14,6 @@
 
   function entered()
   {
-    // console.log(value) 
     state = false;
     handleSubmit(value)
   }

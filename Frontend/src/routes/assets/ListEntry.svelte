@@ -13,7 +13,6 @@
   {
     tk = localStorage.getItem('token')
 
-    console.log(entry.time)
     if(entry.deleted){
       buttonLabel = 'Recover'
       color = '#00b460';

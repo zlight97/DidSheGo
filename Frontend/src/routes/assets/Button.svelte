@@ -10,7 +10,6 @@
   onMount(updateColors)
   function updateColors()
   {
-    console.log(time)
     if(time > Date.now()-3600000)
     {
       color = '#00b460';
@@ -24,11 +23,9 @@
   const submitF = async (e: any) => {
     submitting = true
     let tempTime: EpochTimeStamp = await handleSubmit(id)
-    console.log(tempTime)
     if(tempTime)
     {
       time = tempTime > time ? tempTime : time;
-      console.log(time)
       updateColors()
     }
     submitting = false

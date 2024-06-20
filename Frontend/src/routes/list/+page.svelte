@@ -28,7 +28,6 @@
           return null;
       })
         pets = petInfo;
-        console.log(petInfo)
         if(!pets){
           goto('/')
         }

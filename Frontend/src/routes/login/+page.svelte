@@ -22,8 +22,6 @@
 
     const setSessionUser = async (sessionUser: Login) => {
       if (sessionUser.success) {
-        console.log(sessionUser);
-        console.log(`You're now logged in.`);
         localStorage.token = sessionUser.token;
         await token.set(sessionUser);
         goto('/');

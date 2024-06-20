@@ -28,7 +28,6 @@
           return null;
       })
         pets = petInfo;
-        console.log(petInfo)
         if(!pets){
           logout()
         }
@@ -89,7 +88,6 @@
 
     function listPets(){
       petlistid.set(selectedPet);
-      console.log('going to list')
       goto('/list')
     }
 
