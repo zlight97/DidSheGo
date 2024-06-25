@@ -62,7 +62,6 @@ def logout():
 @app.route("/getpets", methods = ['GET'])
 def getPets():
     response = flask.jsonify()
-    response.headers.add('Access-Control-Allow-Origin', '*')
     if request.method == "GET":
         token = request.headers.get('Access-Token')
         print(token)
@@ -73,7 +72,6 @@ def getPets():
 @app.route("/getallactions", methods = ['POST'])
 def getAllActions():
     response = flask.jsonify()
-    response.headers.add('Access-Control-Allow-Origin', '*')
     if request.method == 'POST':
         data = request.get_json() # this should be a dict of params
         if "auth" in data and "petid" in data :

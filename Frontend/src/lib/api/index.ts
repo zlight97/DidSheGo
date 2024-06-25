@@ -6,8 +6,7 @@ export const createNewPet = async (petName: string, auth: string) => {
 	const res = await fetch(`${API_FULL_URL}/newpet`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json; charset=UTF-8',
-            "Access-Control-Allow-Headers": "x-requested-with"
+			'Content-Type': 'application/json; charset=UTF-8'
 		},
 		body: JSON.stringify({
 			auth: auth,
@@ -38,8 +37,7 @@ export const createNewAction = async (actionName: string, petid: number, auth: s
 	const res = await fetch(`${API_FULL_URL}/newaction`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json; charset=UTF-8',
-            "Access-Control-Allow-Headers": "x-requested-with"
+			'Content-Type': 'application/json; charset=UTF-8'
 		},
 		body: JSON.stringify({
 			auth: auth,
@@ -72,8 +70,7 @@ export const deleteOrRestoreAction = async (actionid: number, auth: string) => {
 	const res = await fetch(`${API_FULL_URL}/updateaction`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json; charset=UTF-8',
-            "Access-Control-Allow-Headers": "x-requested-with"
+			'Content-Type': 'application/json; charset=UTF-8'
 		},
 		body: JSON.stringify({
 			auth: auth,
@@ -104,8 +101,7 @@ export const getPetList = async (auth: string, petid: number) => {
 	const res = await fetch(`${API_FULL_URL}/getallactions`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json; charset=UTF-8',
-            "Access-Control-Allow-Headers": "x-requested-with"
+			'Content-Type': 'application/json; charset=UTF-8'
 		},
 		body: JSON.stringify({
 			auth: auth,
@@ -136,8 +132,7 @@ export const userSignIn = async (email: string, password: string) => {
 	const res = await fetch(`${API_FULL_URL}/submitlogin`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json; charset=UTF-8',
-            "Access-Control-Allow-Headers": "x-requested-with"
+			'Content-Type': 'application/json; charset=UTF-8'
 		},
 		body: JSON.stringify({
 			email: email,
@@ -169,7 +164,6 @@ export const getPetInfo = async (auth: string) => {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json; charset=UTF-8',
-            "Access-Control-Allow-Headers": "x-requested-with",
             'Access-Token':auth
 		}
 	})
@@ -197,8 +191,7 @@ export const sendLogout = async (auth: string) => {
 	const res = await fetch(`${API_FULL_URL}/logout`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json; charset=UTF-8',
-            "Access-Control-Allow-Headers": "x-requested-with"
+			'Content-Type': 'application/json; charset=UTF-8'
 		},
 		body: JSON.stringify({
 			auth: auth
@@ -228,8 +221,7 @@ export const submitTime = async (auth: string, actionId: number, time:EpochTimeS
 	const res = await fetch(`${API_FULL_URL}/submitTime`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json; charset=UTF-8',
-            "Access-Control-Allow-Headers": "x-requested-with"
+			'Content-Type': 'application/json; charset=UTF-8'
 		},
 		body: JSON.stringify({
 			auth: auth,
