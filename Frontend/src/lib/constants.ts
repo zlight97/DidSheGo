@@ -1,2 +1,2 @@
-export const API_BASE_URL = "localhost:5000"
-export const API_FULL_URL = "http://" + API_BASE_URL
+export const API_BASE_URL = "didshego.com/api"
+export const API_FULL_URL = "https://" + API_BASE_URL
