@@ -21,7 +21,7 @@ def getAllActionData(token, petid):
     data = flask.jsonify(dsg.getAllActionData(token, petid))
     return data
 
-@app.route("/submitlogin", methods = ['POST'])
+@app.route("/api/submitlogin", methods = ['POST'])
 def login():
     success = False
     token = ""
@@ -37,7 +37,7 @@ def login():
                 return flask.jsonify({"success":False})
     return flask.jsonify({"success":success,"token":token})
 
-@app.route("/submitTime", methods = ['POST'])
+@app.route("/api/submitTime", methods = ['POST'])
 def submitTime():
     success = False
     token = ""
@@ -49,7 +49,7 @@ def submitTime():
                 success = True
     return flask.jsonify({"success":success,"token":token})
 
-@app.route("/logout", methods = ['POST'])
+@app.route("/api/logout", methods = ['POST'])
 def logout():
     token = ""
     if request.method == 'POST':
@@ -59,7 +59,7 @@ def logout():
     return flask.jsonify({'success':False})
 
 
-@app.route("/getpets", methods = ['GET'])
+@app.route("/api/getpets", methods = ['GET'])
 def getPets():
     response = flask.jsonify()
     if request.method == "GET":
@@ -69,7 +69,7 @@ def getPets():
     print(request)
     return response
 
-@app.route("/getallactions", methods = ['POST'])
+@app.route("/api/getallactions", methods = ['POST'])
 def getAllActions():
     response = flask.jsonify()
     if request.method == 'POST':
@@ -81,7 +81,7 @@ def getAllActions():
     print(request)
     return response
 
-@app.route("/newaction", methods = ['POST'])
+@app.route("/api/newaction", methods = ['POST'])
 def newAction():
     token = ""
     if request.method == 'POST':
@@ -93,7 +93,7 @@ def newAction():
             except: pass
     return flask.jsonify({'success':False})    
 
-@app.route("/updateaction", methods = ['POST'])
+@app.route("/api/updateaction", methods = ['POST'])
 def updateAction():
     token = ""
     if request.method == 'POST':
@@ -105,7 +105,7 @@ def updateAction():
             except: pass
     return flask.jsonify({'success':False})    
 
-@app.route("/newpet", methods = ['POST'])
+@app.route("/api/newpet", methods = ['POST'])
 def newPet():
     token = ""
     if request.method == 'POST':
@@ -119,3 +119,5 @@ def newPet():
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
+    # from waitress import serve
+    # serve(app,host="0.0.0.0", port=5000)#, url_scheme='https')

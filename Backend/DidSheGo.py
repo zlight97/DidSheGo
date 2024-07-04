@@ -23,7 +23,7 @@ def runTest():
 
 def createLogin(email, password):
     try:
-        userid = db.insertNewUser(email,password)
+        userid = db.insertNewUser(email.lower(),password)
     except sqlite3.IntegrityError as e:
         return False
     except:
@@ -183,7 +183,8 @@ def getPetData(token):
         print(e)
         return False
     
-    if data == None or cols == None or len(data) < 1:
+    if (data == None or cols == None or len(data)) < 1  and (noActionData == None or noActionCols == None or len(noActionData) < 1):
+        print(data)
         return False
     i = -1
     for entry in cols:
@@ -237,7 +238,7 @@ def getAllActionData(token, petid):
     return dataList
 
 def login(email, password):
-    data, col = db.getUserInfo(email=email)
+    data, col = db.getUserInfo(email=email.lower())
     pwI = col.index("password")
     i = col.index("id")
     if len(data) == 1:
