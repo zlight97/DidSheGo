@@ -25,8 +25,10 @@ def createLogin(email, password):
     try:
         userid = db.insertNewUser(email.lower(),password)
     except sqlite3.IntegrityError as e:
+        print(e)
         return False
-    except:
+    except Exception as e:
+        print(e)
         return False
     sendValidationEmail(email, userid)
     return login(email,password)
@@ -252,7 +254,7 @@ def login(email, password):
         if utils.checkPassword(password, pw):
             token = generateToken(data[0][i])
             return token
-        
+    print("login failed")
     return False
 
 if __name__ == "__main__":
