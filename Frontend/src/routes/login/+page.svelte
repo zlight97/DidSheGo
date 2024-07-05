@@ -104,9 +104,9 @@
     function handleValidateUsername(val: string) {
       if(newAcc)
       {
-        return val?.length > 3 && ! (val in invalidEmail) && val.match(".*@.*\..+")
+        return val?.length > 3 && ! (val in invalidEmail) && !!val.match(".*@.*\..+")
       }
-      return val?.length > 3 && val.match(".*@.*\\..+")
+      return val?.length > 3 && !!val.match(".*@.*\\..+")
     }
     function handleValidatePassword(val: string) {
       if(newAcc)
