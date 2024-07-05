@@ -29,7 +29,7 @@ def createLogin(email, password):
     except:
         return False
     sendValidationEmail(email, userid)
-    return True
+    return login(email,password)
 
 def checkAuthToken(auth):
     try:
@@ -184,8 +184,14 @@ def getPetData(token):
         return False
     
     if (data == None or cols == None or len(data)) < 1  and (noActionData == None or noActionCols == None or len(noActionData) < 1):
+        try:
+            uid, auth = checkAuthToken(token)
+        except:
+            return False
         print(data)
-        return False
+        if not auth:
+            return False
+        return []
     i = -1
     for entry in cols:
         i+= 1

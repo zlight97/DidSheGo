@@ -37,6 +37,23 @@ def login():
                 return flask.jsonify({"success":False})
     return flask.jsonify({"success":success,"token":token})
 
+@app.route("/api/createaccount", methods = ['POST'])
+def createLogin():
+    success = False
+    token = ""
+    print("/createaccount received")
+    if request.method == 'POST':
+        data = request.get_json() # this should be a dict of params
+        if "email" in data and "password" in data:
+            try:
+                token = dsg.createLogin(data["email"], data["password"])
+                if token:
+                    success = True
+            except:
+                return flask.jsonify({"success":False})
+    return flask.jsonify({"success":success,"token":token})
+
+
 @app.route("/api/submitTime", methods = ['POST'])
 def submitTime():
     success = False
