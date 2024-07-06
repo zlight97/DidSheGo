@@ -1,7 +1,7 @@
 <script lang="ts">
     import Field from "../assets/Field.svelte"
     import { blur } from "svelte/transition"
-    import { userSignIn } from "$lib/api"
+    import { createAccount, userSignIn } from "$lib/api"
     import { goto } from "$app/navigation"
     import { token } from "$lib/stores"
     import type { Login } from "$lib";
@@ -10,11 +10,13 @@
 
     let email = ""
     let password = ""
+    let secondPw = ""
     let passwordValid: boolean = false
     let emailValid: boolean = false
     let submitting: boolean = false
     let save: boolean = false
-
+    let newAcc: boolean = false
+    let invalidEmail: Set<string> = new Set<string>()
     let valid = false
     $: {
       valid = emailValid && passwordValid
@@ -27,8 +29,19 @@
         goto('/');
       }
     };
+    
+    const checkLogin = async (sessionUser: Login) => {
+      if (!sessionUser.success) {
+        invalidEmail.add(email)
+        handleValidateUsername(email)
+      }
+      else{
+        setSessionUser(sessionUser);
+      }
+    };
 
-    onMount(() => {
+    function checkSavedCreds()
+    {
       let em = localStorage.getItem('email')
       let pw = localStorage.getItem('password')
       if(em && pw)
@@ -39,36 +52,78 @@
         emailValid = handleValidateUsername(email)
         passwordValid = handleValidatePassword(password);
       }
-    })
+    }
+    function swapLoginState()
+    {
+      if(newAcc)
+      {
+        newAcc = false
+        checkSavedCreds()
+      }
+      else
+      {
+        newAcc = true
+        email = ""
+        password = ""
+        secondPw = ""
+        emailValid = handleValidateUsername(email)
+        passwordValid = handleValidatePassword(password);
+      }
+    }
+    onMount(checkSavedCreds)
 
     const handleSubmit = async () => {
-      if(save)
+      if(!newAcc)
       {
-        localStorage.email = email;
-        localStorage.password = password;
-      }else{
-        localStorage.removeItem("email");
-        localStorage.removeItem("password");
-      }
-      const sessionUser = await userSignIn(email, password).catch((error) => {
-        console.log(error);
-        return null;
-      });
+        if(save)
+        {
+          localStorage.email = email;
+          localStorage.password = password;
+        }else{
+          localStorage.removeItem("email");
+          localStorage.removeItem("password");
+        }
+        const sessionUser = await userSignIn(email, password).catch((error) => {
+          console.log(error);
+          return null;
+        });
 
-      await setSessionUser(sessionUser);
+        await setSessionUser(sessionUser);
+      }
+      else
+      {
+        const sessionUser = await createAccount(email,password).catch((error)=>{
+          console.log(error);
+          return null;
+        }
+        );
+        await checkLogin(sessionUser);
+      }
 	};
 
     function handleValidateUsername(val: string) {
-      return val?.length > 3
+      if(newAcc)
+      {
+        return val?.length > 3 && ! (val in invalidEmail) && !!val.match(".*@.*\..+")
+      }
+      return val?.length > 3 && !!val.match(".*@.*\\..+")
     }
     function handleValidatePassword(val: string) {
+      if(newAcc)
+      {
+        return (password===secondPw) && val?.length>3
+      }
       return val?.length > 3
     }
   </script>
   <Header/>
   <section transition:blur={{ delay: 300, duration: 800 }}>
     <form on:submit|preventDefault={handleSubmit}>
+      {#if newAcc}
+      <h1>Create New Account</h1>
+      {:else}
       <h1>Login</h1>
+      {/if}
       <Field
         label="Email"
         disabled={submitting}
@@ -82,9 +137,23 @@
         type="password"
         bind:valid={passwordValid}
         validate={handleValidatePassword} />
+      {#if newAcc}
+      <Field
+      disabled={submitting}
+      label="Validate Password"
+      bind:value={secondPw}
+      type="password"
+      bind:valid={passwordValid}
+      validate={handleValidatePassword} />
+      {:else}
       <input type="checkbox" bind:checked={save} />
       Remember me
-      <p><button type="submit" disabled={!valid || submitting}>Login</button></p>
+      {/if}
+      <p><button type="submit" disabled={!valid || submitting}>{#if newAcc}Create Account{:else}Login{/if}</button></p>
+      
+      <a href='#' on:click={swapLoginState}>{#if newAcc}Login{:else}New Account{/if}</a>
+      
+      
     </form>
   </section>
   
