@@ -25,11 +25,13 @@ def createLogin(email, password):
     try:
         userid = db.insertNewUser(email.lower(),password)
     except sqlite3.IntegrityError as e:
+        print(e)
         return False
-    except:
+    except Exception as e:
+        print(e)
         return False
     sendValidationEmail(email, userid)
-    return True
+    return login(email,password)
 
 def checkAuthToken(auth):
     try:
@@ -184,8 +186,14 @@ def getPetData(token):
         return False
     
     if (data == None or cols == None or len(data)) < 1  and (noActionData == None or noActionCols == None or len(noActionData) < 1):
+        try:
+            uid, auth = checkAuthToken(token)
+        except:
+            return False
         print(data)
-        return False
+        if not auth:
+            return False
+        return []
     i = -1
     for entry in cols:
         i+= 1
@@ -246,7 +254,7 @@ def login(email, password):
         if utils.checkPassword(password, pw):
             token = generateToken(data[0][i])
             return token
-        
+    print("login failed")
     return False
 
 if __name__ == "__main__":

@@ -5,9 +5,16 @@
   export let handleSubmit: (val: number) => Promise<EpochTimeStamp>
   export let id : number = -1
   export let time: EpochTimeStamp = 123;
+  let timeStr: string = "";
   let color : string;
   let hoverColor : string;
-  onMount(updateColors)
+  onMount(() =>{
+    let interval = setInterval(() => 
+    {
+      updateColors()
+      timeStr = getTime()
+    }, 1000)
+  })
   function updateColors()
   {
     if(time > Date.now()-3600000)
@@ -30,9 +37,25 @@
     }
     submitting = false
   }
+  
+  function getTime()
+  {
+    let d = new Date(Date.now()-time);
+    let dateString = "";
+    let days = d.getUTCDate() - 1;
+    if(days>0)
+      dateString = dateString + days + "d "
+    let hours = d.getUTCHours();
+    if(hours>0)
+      dateString = dateString + hours + "h "
+    let minutes = d.getUTCMinutes();
+      dateString = dateString + minutes + "m"
+    return dateString
+  }
+
 </script>
 <button style="--button-color: {color}; --button-hover: {hoverColor}"
- on:click|preventDefault={submitF} disabled={submitting}>{label}. Last: {((Date.now()-time)/3600000).toFixed(2)}h ago.</button>
+ on:click|preventDefault={submitF} disabled={submitting}>{label}. Last: {timeStr} ago.</button>
 
 <style lang="postcss">
   button {
