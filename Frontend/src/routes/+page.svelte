@@ -38,7 +38,13 @@
       }
     }
 
-    onMount(getData);
+    onMount(() => {
+      getData();
+      let interval = setInterval(() => 
+    {
+       getData();
+    }, 400000)
+    });
     
     const submitAction = async (actionId: number) => {
       if(!tk)

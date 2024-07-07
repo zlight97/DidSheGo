@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { shadeColor } from "$lib";
   import { onMount } from "svelte";
   export let label: string
   export let submitting : boolean = false
@@ -9,23 +10,56 @@
   let color : string;
   let hoverColor : string;
   onMount(() =>{
+    timeStr = getTime()
+    updateColors()
     let interval = setInterval(() => 
     {
       updateColors()
       timeStr = getTime()
     }, 1000)
   })
+
+
+  function getStoredStr(name: string, base: string)
+  {
+    let tempNum = localStorage.getItem(name)
+    if(tempNum === null)
+    {
+      return base
+    }
+    return tempNum
+  }
+
+  function getStoredInt(name: string, base: number)
+  {
+    let tempNum = localStorage.getItem(name)
+    if(tempNum === null)
+    {
+      return base
+    }
+    return parseInt(tempNum)
+  }
+
   function updateColors()
   {
-    if(time > Date.now()-3600000)
+    let midTime: number = getStoredInt('midTime',14400000)
+    let highTime: number = getStoredInt('highTime',21600000)
+    let lowColor: string = getStoredStr('lowColor','#00ff24')
+    let midColor: string = getStoredStr('midColor','#ffc100')
+    let highColor: string = getStoredStr('highColor','#ff0000')
+    let d = Date.now()
+    if(time > d-midTime)
     {
-      color = '#00b460';
-      hoverColor = '#006400';
+      color = lowColor;
+    }
+    else if(time > d-highTime)
+    {
+      color = midColor;
     }
     else{
-      color = 'black'
-      hoverColor = 'red'
+      color = highColor
     }
+    hoverColor = shadeColor(color,-50)
   }
   const submitF = async (e: any) => {
     submitting = true
