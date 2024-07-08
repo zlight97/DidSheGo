@@ -3,9 +3,11 @@
   import { onMount } from "svelte";
   export let label: string
   export let submitting : boolean = false
-  export let handleSubmit: (val: number) => Promise<EpochTimeStamp>
+  export let handleSubmit: (val: number) => Promise<EpochTimeStamp|null> 
   export let id : number = -1
   export let time: EpochTimeStamp = 123;
+  export let midTime: number = 4;
+  export let highTime: number = 6;
   let timeStr: string = "";
   let color : string;
   let hoverColor : string;
@@ -30,29 +32,19 @@
     return tempNum
   }
 
-  function getStoredInt(name: string, base: number)
-  {
-    let tempNum = localStorage.getItem(name)
-    if(tempNum === null)
-    {
-      return base
-    }
-    return parseInt(tempNum)
-  }
-
   function updateColors()
   {
-    let midTime: number = getStoredInt('midTime',14400000)
-    let highTime: number = getStoredInt('highTime',21600000)
+    let mt = 3600000 * midTime
+    let ht = 3600000 * highTime
     let lowColor: string = getStoredStr('lowColor','#00ff24')
     let midColor: string = getStoredStr('midColor','#ffc100')
     let highColor: string = getStoredStr('highColor','#ff0000')
     let d = Date.now()
-    if(time > d-midTime)
+    if(time > d-mt)
     {
       color = lowColor;
     }
-    else if(time > d-highTime)
+    else if(time > d-ht)
     {
       color = midColor;
     }
@@ -63,8 +55,8 @@
   }
   const submitF = async (e: any) => {
     submitting = true
-    let tempTime: EpochTimeStamp = await handleSubmit(id)
-    if(tempTime)
+    let tempTime: EpochTimeStamp | null = await handleSubmit(id)
+    if(tempTime!=null)
     {
       time = tempTime > time ? tempTime : time;
       updateColors()
