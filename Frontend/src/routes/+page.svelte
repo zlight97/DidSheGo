@@ -114,6 +114,7 @@
     function selectPet(val: number) {
       selectedPet = val;
       modal.set(null)
+      edit = false
     }
 
     function goBack(val: number){
