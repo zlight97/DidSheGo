@@ -150,7 +150,7 @@
       Remember me
       {/if}
       <p><button type="submit" disabled={!valid || submitting}>{#if newAcc}Create Account{:else}Login{/if}</button></p>
-      
+      <!-- svelte-ignore a11y-invalid-attribute -->
       <a href='#' on:click={swapLoginState}>{#if newAcc}Login{:else}New Account{/if}</a>
       
       
