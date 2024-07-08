@@ -65,6 +65,7 @@
       if(edit)
       {
         //module doesnt seem to be meant for typescript, so we have to ignore this error
+        // @ts-ignore
         modal.set(bind(ColorSelector, {actionId: actionId, callback: colorSelectorCallback}));
         return null;
       }
