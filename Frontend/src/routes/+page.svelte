@@ -20,6 +20,7 @@
     let selectedPet: number = -1;
     let selectedTime: EpochTimeStamp | null = null;
     let edit: boolean = false;
+    let shared = false;
     const modal = writable(null);
 
     
@@ -125,6 +126,13 @@
       goto('/list')
     }
 
+    function sharePet(email: string)
+    {
+      //probably needs to be async, send token email and selectedPet to backend
+      //this might need to be a string instead of boolean to determine if share was successful or not
+      shared = true
+    }
+
     function getStoredInt(name: string, base: number)
     {
       let tempNum = localStorage.getItem(name)
@@ -178,6 +186,12 @@
         <NewButton 
           handleSubmit={newAction}
         />
+        {#if edit}
+          <NewButton 
+            label={shared?"Shared":"Share with (email):"}
+            handleSubmit={sharePet}
+          />
+        {/if}
         <PetButton
           label={edit?"Done editing":"Edit"}
           handleSubmit={swapEdit}
