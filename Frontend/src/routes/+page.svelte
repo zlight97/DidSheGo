@@ -113,6 +113,7 @@
 
     function selectPet(val: number) {
       selectedPet = val;
+      modal.set(null)
     }
 
     function goBack(val: number){
