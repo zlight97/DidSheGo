@@ -134,6 +134,18 @@ def newPet():
             except: pass
     return flask.jsonify({'success':False})   
 
+@app.route("/api/sharepet", methods = ['POST'])
+def sharePet():
+    token = ""
+    if request.method == 'POST':
+        data = request.get_json() # this should be a dict of params
+        if "auth" in data and "petid" in data and "email" in data:
+            try:
+                success = dsg.sharePet(data["auth"], data["petid"], data["email"])
+                return flask.jsonify({'success':success})
+            except: pass
+    return flask.jsonify({'success':1})   
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
     # from waitress import serve

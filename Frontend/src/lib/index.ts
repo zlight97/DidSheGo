@@ -5,7 +5,7 @@ import { sendLogout } from "$lib/api"
 export interface ActionEntry{
     actionid: number,
     name: string,
-    time: number,
+    time: string,
     deleted: boolean
 }
 

@@ -19,6 +19,8 @@ insertNewUser = "INSERT INTO users (password,email,verified) VALUES (?, ?, 0);"
 insertNewPet = "INSERT INTO pets (userid,name) VALUES (?,?);"
 insertActionType = "INSERT INTO actiontype (petid,name,position) VALUES (?,?,(SELECT ifnull(MAX(position) + 1,0) FROM actiontype WHERE petid=?));"
 insertAction = "INSERT INTO actions (typeid,deleted,Timestamp) VALUES (?,0,?);"
+sharePet = "INSERT INTO guests (petid, userid) VALUES (?, (SELECT id FROM users WHERE email=?));"
+getSharedPet = "SELECT id FROM guests WHERE petid=? userid=(SELECT id FROM users WHERE email=?);"
 
 #Select queries
 selectUserId = "SELECT * FROM users WHERE id = ?;"

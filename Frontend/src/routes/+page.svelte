@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { SvelteComponent, getContext, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { blur } from "svelte/transition"
     import { petlistid } from "$lib/stores"
     import Button from "./assets/Button.svelte";
     import PetButton from "./assets/PetButton.svelte";
-    import { getPetInfo, submitTime, createNewAction, createNewPet} from "$lib/api";
-    import { logout, updateToken, type NumberDataTuple, type PetInfo } from "$lib/index"
+    import { getPetInfo, submitTime, createNewAction, createNewPet, sendSharePet} from "$lib/api";
+    import { logout, updateToken, type PetInfo } from "$lib/index"
     import Spinner from "./assets/Spinner.svelte";
     import { goto } from "$app/navigation";
     import NewButton from "./assets/NewButton.svelte";
@@ -20,7 +20,7 @@
     let selectedPet: number = -1;
     let selectedTime: EpochTimeStamp | null = null;
     let edit: boolean = false;
-    let shared = false;
+    let shared = "Share with (email):";
     const modal = writable(null);
 
     
@@ -127,13 +127,40 @@
       goto('/list')
     }
 
-    function sharePet(email: string)
-    {
-      //probably needs to be async, send token email and selectedPet to backend
-      //this might need to be a string instead of boolean to determine if share was successful or not
-      shared = true
+    const sharePet = async (email: string) => {
+      shared = "..."
+      if(!tk)
+      {
+        logout()
+        return 0;
+      }
+      else if(selectedPet<0)
+      {
+        goto('/')
+      }
+      let resp = await sendSharePet(email, tk, selectedPet);
+      if(!resp || resp.success > 0)
+      {
+        if (resp.success > 1)
+        {
+          shared = "Already Shared"
+        }
+        else{
+          shared = "Share Failed"
+        }
+        return 0
+      }
+      shared = "Shared"
     }
-
+    function getStoredStr(name: string, base: string)
+    {
+      let tempNum = localStorage.getItem(name)
+      if(tempNum === null)
+      {
+        return base
+      }
+      return tempNum
+    }
     function getStoredInt(name: string, base: number)
     {
       let tempNum = localStorage.getItem(name)
@@ -179,6 +206,9 @@
               submitting={submitting}
               time={v.time}
               handleSubmit={handleButton}
+              lowColor= {getStoredStr('lowColoraID'+v.id,'#00ff24')}
+              midColor={getStoredStr('midColoraID'+v.id,'#ffc100')}
+              highColor= {getStoredStr('highColoraID'+v.id,'#ff0000')}
               midTime={getStoredInt("maID"+v.id,4)}
               highTime={getStoredInt("haID"+v.id,6)}
             />
@@ -189,7 +219,7 @@
         />
         {#if edit}
           <NewButton 
-            label={shared?"Shared":"Share with (email):"}
+            label={shared}
             handleSubmit={sharePet}
           />
         {/if}

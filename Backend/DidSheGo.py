@@ -132,7 +132,20 @@ def createNewPet(token, petname):
     try: petid = db.insertNewPet(userid, petname)
     except: return False
     return newToken, petid
-
+def sharePet(token, petid, email):
+    try: newToken = checkPetId(token, petid)
+    except Exception as e: 
+        print(e)
+        return 1
+    try: 
+        if not db.getSharedPet(petid,email): return False
+    except: return 2
+    try: success = 0 if db.sharePet(petid, email) else 1
+    except Exception as e:
+        print(e)
+        return 1
+    print(success)
+    return success
 def actionInverted(token, actionid):
     try: newToken = checkActionId(token, actionid)
     except Exception as e: 
@@ -254,7 +267,6 @@ def login(email, password):
         if utils.checkPassword(password, pw):
             token = generateToken(data[0][i])
             return token
-    print("login failed")
     return False
 
 if __name__ == "__main__":

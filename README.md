@@ -9,3 +9,5 @@ New svelte object, add new screen, takes petid | null, selects a function to run
 Svelte requires npm, yarn, vite
 
 npm i -D @sveltejs/adapter-node
+npm install --save svelte-simple-modal
+npm i svelte-awesome-color-picker
