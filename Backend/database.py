@@ -75,6 +75,12 @@ def insertNewActionType(petid, actionName):
 def insertAction(typeid,time):
     return submitQuery(queries.insertAction, (typeid, time))
 
+def sharePet(petid, email):
+    return submitQuery(queries.sharePet, (petid,email))
+
+def isPetShared(petid, email):
+    return not not submitQuery(queries.getSharedPet, (petid,email))
+
 def authPet(auth, petid):
     return select(queries.validatePetInfo, (auth, petid))
 

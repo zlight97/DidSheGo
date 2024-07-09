@@ -8,6 +8,9 @@
   export let time: EpochTimeStamp = 123;
   export let midTime: number = 4;
   export let highTime: number = 6;
+  export let lowColor: string = '#00ff24'
+  export let midColor: string = '#ffc100'
+  export let highColor: string = '#ff0000'
   let timeStr: string = "";
   let color : string;
   let hoverColor : string;
@@ -22,23 +25,10 @@
   })
 
 
-  function getStoredStr(name: string, base: string)
-  {
-    let tempNum = localStorage.getItem(name)
-    if(tempNum === null)
-    {
-      return base
-    }
-    return tempNum
-  }
-
   function updateColors()
   {
     let mt = 3600000 * midTime
     let ht = 3600000 * highTime
-    let lowColor: string = getStoredStr('lowColor','#00ff24')
-    let midColor: string = getStoredStr('midColor','#ffc100')
-    let highColor: string = getStoredStr('highColor','#ff0000')
     let d = Date.now()
     if(time > d-mt)
     {
