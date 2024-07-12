@@ -74,13 +74,13 @@
     label="High Color"
     />
     <Field
-    label="Yellow start time (Hours)"
+    label="Middle start time (Hours)"
     disabled={false}
     bind:value={midValue}
     bind:valid={midValid}
     validate={validateTime} />
     <Field
-    label="Red start time (Hours)"
+    label="High start time (Hours)"
     disabled={false}
     bind:value={highValue}
     bind:valid={highValid}
