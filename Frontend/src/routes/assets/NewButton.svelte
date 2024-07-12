@@ -4,7 +4,7 @@
   export let textColor: string = 'white';
   export let handleSubmit: (val: string) => void
   let state = false;
-  let label: string = "Add new";
+  export let label: string = "Add new";
   let value: string = "";
 
   function clicked()

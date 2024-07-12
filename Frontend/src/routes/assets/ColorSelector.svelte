@@ -1,8 +1,8 @@
 <script lang="ts">
     import { getContext, onMount } from "svelte";
-    import PetButton from "./PetButton.svelte";
     import Field from "./Field.svelte";
     import type { Context } from 'svelte-simple-modal';
+    import ColorPicker from 'svelte-awesome-color-picker';
     const { close } = getContext<Context>('simple-modal');
 
     export let actionId = 1;
@@ -14,10 +14,23 @@
     let highValid: boolean = false;
     let midTime = localStorage.getItem("m"+storedTag)
     let highTime = localStorage.getItem("h"+storedTag)
+    let lowColor: string = getStoredStr('lowColor'+storedTag,'#00ff24')
+    let midColor: string = getStoredStr('midColor'+storedTag,'#ffc100')
+    let highColor: string = getStoredStr('highColor'+storedTag,'#ff0000')
     let valid = false
     $: {
       valid = midValid && highValid
     }
+
+    function getStoredStr(name: string, base: string)
+  {
+    let tempNum = localStorage.getItem(name)
+    if(tempNum === null)
+    {
+      return base
+    }
+    return tempNum
+  }
 
     onMount(()=>{
         if(midTime!=null){
@@ -34,6 +47,9 @@
     {
         localStorage.setItem("m"+storedTag,midValue)
         localStorage.setItem("h"+storedTag,highValue)
+        localStorage.setItem("lowColor"+storedTag, lowColor)
+        localStorage.setItem("midColor"+storedTag, midColor)
+        localStorage.setItem("highColor"+storedTag, highColor)
         callback()
         close()
     }
@@ -45,14 +61,26 @@
   </script>
 
 <form on:submit|preventDefault={updateStores}>
+    <ColorPicker
+	bind:hex={lowColor}
+    label="Low Color"
+    />
+    <ColorPicker
+	bind:hex={midColor}
+    label="Middle Color"
+    />
+    <ColorPicker
+	bind:hex={highColor}
+    label="High Color"
+    />
     <Field
-    label="Yellow start time (Hours)"
+    label="Middle start time (Hours)"
     disabled={false}
     bind:value={midValue}
     bind:valid={midValid}
     validate={validateTime} />
     <Field
-    label="Red start time (Hours)"
+    label="High start time (Hours)"
     disabled={false}
     bind:value={highValue}
     bind:valid={highValid}

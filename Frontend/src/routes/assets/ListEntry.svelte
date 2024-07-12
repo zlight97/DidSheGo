@@ -2,8 +2,8 @@
   import { onMount } from "svelte";
   import { type ActionEntry } from "$lib/index"
   import { deleteOrRestoreAction } from "$lib/api/index"
-    import { parse } from "svelte/compiler";
   export let entry: ActionEntry
+  let time: string;
   let buttonLabel: string;
   let color : string;
   let hoverColor : string;
@@ -11,6 +11,10 @@
   onMount(parseEntry)
   function parseEntry()
   {
+    let d = new Date(Date.parse(entry.time))
+    time = d.toString()
+    time = time.substring(3,time.indexOf(" GMT"))
+    console.log(time)
     tk = localStorage.getItem('token')
 
     if(entry.deleted){
@@ -39,7 +43,7 @@
     handleSubmit()
   }
 </script>
-<div>{entry.name} at {entry.time.toString().substring(0,19)}<button style="--button-color: {color}; --button-hover: {hoverColor}"
+<div>{entry.name} on {time}<button style="--button-color: {color}; --button-hover: {hoverColor}"
  on:click|preventDefault={submitF} >{buttonLabel}</button>
 </div>
 
