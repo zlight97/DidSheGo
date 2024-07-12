@@ -12,7 +12,8 @@
   function parseEntry()
   {
     let d = new Date(Date.parse(entry.time))
-    time = d.getMonth() + "-" + d.getDate().toString() + "-" + d.getFullYear().toString() + "@" + d.toTimeString().substring(0,9)
+    time = d.toString()
+    time = time.substring(3,time.indexOf(" GMT"))
     console.log(time)
     tk = localStorage.getItem('token')
 
