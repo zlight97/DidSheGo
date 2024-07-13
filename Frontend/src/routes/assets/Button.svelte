@@ -15,6 +15,7 @@
   let color : string;
   let hoverColor : string;
   onMount(() =>{
+    time = time*1000
     timeStr = getTime()
     updateColors()
     let interval = setInterval(() => 

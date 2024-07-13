@@ -11,10 +11,11 @@
   onMount(parseEntry)
   function parseEntry()
   {
-    let d = new Date(Date.parse(entry.time))
+    let d: Date;
+    d = new Date(0)
+    d.setUTCSeconds(entry.time)
     time = d.toString()
     time = time.substring(3,time.indexOf(" GMT"))
-    console.log(time)
     tk = localStorage.getItem('token')
 
     if(entry.deleted){

@@ -112,6 +112,13 @@ def getOnlyPetInfo(authkey):
 def getActionId(petid, actionName):
     return select(queries.selectActionId,(petid,actionName))
 
+def updateTimestamps():
+    data, col = select(queries.migrationSelect, ())
+    m = {}
+    for d in data:
+        print(d[0])
+        submitQuery(queries.migrationUpdate, (utils.strToEpoch(d[0]),d[0]))
+
 def getData():
     cursor, con = getCursor()
     query = "SELECT * FROM users"
