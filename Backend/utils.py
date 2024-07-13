@@ -9,12 +9,17 @@ def checkPassword(pw, hash):
 def epochToDatetime(epoch):
     from datetime import datetime
     epoch = int(epoch/1000)
-    return datetime.fromtimestamp(epoch)
+    return str(epoch)#datetime.fromtimestamp(epoch)
 
 def strToEpoch(dateStr):
-    from datetime import datetime
-    dt = getDatetime(dateStr)
-    return int(dt.timestamp() * 1000)
+    try:
+        from datetime import datetime
+        dt = getDatetime(dateStr)
+        e = int(dt.timestamp())
+        return e
+    except:
+        print("ERROR: strToEpoch. String not recognized: " + str(dateStr))
+        return dateStr
 
 def getDatetime(time):
     import re

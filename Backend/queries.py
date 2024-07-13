@@ -92,3 +92,6 @@ INNER JOIN pets as p ON p.id = petid ) allpets
 INNER JOIN actiontype as act ON act.petid = allpets.petid
 INNER JOIN actions ON actions.typeid = act.id
 WHERE va.validationstr = ? and actionid = ?;"""
+
+migrationSelect = "SELECT Timestamp FROM actions;"
+migrationUpdate = "UPDATE actions set Timestamp = ? WHERE Timestamp = ?"
