@@ -11,18 +11,21 @@
   export let lowColor: string = '#00ff24'
   export let midColor: string = '#ffc100'
   export let highColor: string = '#ff0000'
+  let calcTime: EpochTimeStamp = 123;
+  let interval: number | null = null;
   let timeStr: string = "";
   let color : string;
   let hoverColor : string;
   onMount(() =>{
-    time = time*1000
+    calcTime = time*1000
     timeStr = getTime()
     updateColors()
-    let interval = setInterval(() => 
-    {
-      updateColors()
-      timeStr = getTime()
-    }, 1000)
+    if(interval===null)
+      interval = setInterval(() => 
+      {
+        updateColors()
+        timeStr = getTime()
+      }, 10000)
   })
 
 
@@ -31,11 +34,11 @@
     let mt = 3600000 * midTime
     let ht = 3600000 * highTime
     let d = Date.now()
-    if(time > d-mt)
+    if(calcTime > d-mt)
     {
       color = lowColor;
     }
-    else if(time > d-ht)
+    else if(calcTime > d-ht)
     {
       color = midColor;
     }
@@ -56,8 +59,10 @@
   }
   
   function getTime()
-  {
-    let d = new Date(Date.now()-time);
+  { 
+    calcTime = time*1000
+    let n = Date.now()
+    let d = new Date(n-calcTime);
     let dateString = "";
     let days = d.getUTCDate() - 1;
     if(days>0)
