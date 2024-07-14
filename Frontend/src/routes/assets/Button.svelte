@@ -52,7 +52,8 @@
     let tempTime: EpochTimeStamp | null = await handleSubmit(id)
     if(tempTime!=null)
     {
-      time = tempTime > time ? tempTime : time;
+      time = tempTime > calcTime ? Math.floor(tempTime/1000) : time;
+      timeStr = getTime()
       updateColors()
     }
     submitting = false
