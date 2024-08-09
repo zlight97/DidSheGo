@@ -165,7 +165,7 @@ def actionMarked(token, actiontypeid, time = False):
         print(e)
         return False
     if not time:
-        time = int(datetime.datetime.now().timestamp())
+        time = datetime.datetime.now()
     try: 
         if newToken:
             id = db.insertAction(actiontypeid, time)
@@ -256,6 +256,7 @@ def getAllActionData(token, petid):
     dataList = []
     for entry in data:
         dataList.append({"actionid":entry[aIdI], "name":entry[aNameI], "time":entry[timeI], "deleted":entry[dI]==1})
+        print(entry[timeI])
     return dataList
 
 def login(email, password):
