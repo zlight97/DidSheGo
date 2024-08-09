@@ -55,6 +55,7 @@
           entry={entry}
         />
       {/each}
+      <div class="clear"></div>
       <footer>
         <PetButton
           label="↩"
@@ -71,6 +72,7 @@
 {/if}
   
   <style lang="postcss">
+    .clear { clear: both; height: 60px; }
     section {
       margin: 0 auto;
       width: 300px;

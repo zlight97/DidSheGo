@@ -228,6 +228,7 @@
           label={edit?"Done editing":"Edit"}
           handleSubmit={swapEdit}
         />
+        <div class="clear"></div>
         <footer>
         <PetButton
           label="↩"
@@ -249,6 +250,8 @@
   </section>
   
   <style lang="postcss">
+  .clear { clear: both; height: 60px; }
+
     section {
       margin: 0 auto;
       width: 300px;
