@@ -15,7 +15,7 @@ def strToEpoch(dateStr):
     try:
         from datetime import datetime
         dt = getDatetime(dateStr)
-        e = int(dt.timestamp())
+        e = int(dt.timestamp())  - (12 *3600)
         return e
     except:
         print("ERROR: strToEpoch. String not recognized: " + str(dateStr))

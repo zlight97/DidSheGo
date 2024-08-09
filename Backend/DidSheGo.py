@@ -165,7 +165,7 @@ def actionMarked(token, actiontypeid, time = False):
         print(e)
         return False
     if not time:
-        time = datetime.datetime.now()
+        time = int(datetime.datetime.now().timestamp())
     try: 
         if newToken:
             id = db.insertAction(actiontypeid, time)
