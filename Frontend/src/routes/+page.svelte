@@ -22,6 +22,7 @@
     let edit: boolean = false;
     let shared = "Share with (email):";
     const modal = writable(null);
+    let loaded = false;
 
     
     const getData = async () => {
@@ -30,10 +31,12 @@
       {
         const petInfo = await getPetInfo(tk).catch((error) => {
           console.log(error);
-          logout()
-          return null;
+          // logout()
+          if(!loaded)
+            getData()
       })
         pets = petInfo;
+        loaded = true
         if(!pets){
           logout()
         }
