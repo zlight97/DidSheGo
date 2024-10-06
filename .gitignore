@@ -9,9 +9,11 @@ __pycache__
 Frontend/node_modules
 Frontend//build
 Frontend//.svelte-kit
+Frontend/.svelte-kit
 Frontend//package
 Frontend/.env
 Frontend/.env.*
 Frontend/!.env.example
 Frontend/vite.config.js.timestamp-*
 Frontend/vite.config.ts.timestamp-*
+Frontend/build

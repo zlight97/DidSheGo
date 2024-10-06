@@ -2,7 +2,7 @@ import sqlite3
 import utils
 import queries
 #TODO does this need to be threadsafe for flask?
-DBNAME = "test.sqlite"
+DBNAME = "/home/ubuntu/DidSheGo/Backend/prod.sqlite"
 def getCursor(db=DBNAME):
     con = sqlite3.connect(db,detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cursor = con.cursor()
