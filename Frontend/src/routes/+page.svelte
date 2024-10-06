@@ -32,8 +32,6 @@
         const petInfo = await getPetInfo(tk).catch((error) => {
           console.log(error);
           // logout()
-          if(!loaded)
-            getData()
       })
         pets = petInfo;
         loaded = true
